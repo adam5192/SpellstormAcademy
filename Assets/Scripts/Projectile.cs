@@ -6,7 +6,7 @@ public class Projectile : MonoBehaviour
 {
     public float speed = 10f;
     public float lifetime = 2f;
-    public int damage = 1;
+    public float damage = 1f;
     private Vector2 direction;
 
     public void Initialize(Vector2 dir)

@@ -58,11 +58,17 @@ public class PlayerController : MonoBehaviour
 
     void FireProjectile()
     {
-        // simple shoot upward for now
         Vector2 shootDir = Vector2.up;
         GameObject proj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-        proj.GetComponent<Projectile>().Initialize(shootDir);
+        Projectile p = proj.GetComponent<Projectile>();
+
+        // apply upgrade bonuses dynamically
+        p.speed += (projectileLevel - 1) * 2f;
+        p.damage += (projectileLevel - 1) * 1f;
+
+        p.Initialize(shootDir);
     }
+
 
     public void CollectRune(string runeType)
     {
@@ -110,10 +116,5 @@ public class PlayerController : MonoBehaviour
     {
         projectileLevel++;
         Debug.Log("projectile upgraded lvl " + projectileLevel);
-
-        // quick stat boost
-        Projectile proj = projectilePrefab.GetComponent<Projectile>();
-        proj.speed += 2f;
-        proj.damage += 1;
     }
 }
