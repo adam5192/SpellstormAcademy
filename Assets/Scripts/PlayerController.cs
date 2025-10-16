@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour
     private int fireRuneCount = 0;
     private int projectileLevel = 1;
 
+    private UIManager uiManager;
+    private float maxHealth = 10f;
+    private float currentHealth;
 
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
@@ -22,6 +25,10 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        currentHealth = maxHealth;
+        uiManager = FindObjectOfType<UIManager>();
+        if (uiManager != null)
+            uiManager.UpdateHealth(currentHealth);
     }
 
     void Update()
@@ -53,6 +60,7 @@ public class PlayerController : MonoBehaviour
         if (runeType == "Fire")
         {
             fireRuneCount++;
+            uiManager.UpdateRuneUI(fireRuneCount);
             Debug.Log("Collected Fire Rune! (" + fireRuneCount + "/3)");
 
             if (fireRuneCount >= 3)
