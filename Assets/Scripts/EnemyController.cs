@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public float moveSpeed = 2f;
-    private Transform player;
-    public GameObject runePrefab;
+    public float moveSpeed = 2f;          // enemy speed
+    private Transform player;             // player reference
+    public GameObject runePrefab;         // what to drop when dead
+    private float attackCooldown = 1f;    // delay between hits
+    private float attackTimer = 0f;       // timer for that delay
+    private float stopDistance = 0.5f;    // how close to stop from player
 
     void Start()
     {
+        // find the player once at start
         player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
@@ -17,14 +21,33 @@ public class EnemyController : MonoBehaviour
     {
         if (player == null) return;
 
-        // Move toward player
-        Vector2 direction = (player.position - transform.position).normalized;
-        transform.position += (Vector3)(direction * moveSpeed * Time.deltaTime);
+        // move toward player but stop when close enough
+        float distance = Vector2.Distance(player.position, transform.position);
+        if (distance > stopDistance)
+        {
+            Vector2 dir = (player.position - transform.position).normalized;
+            transform.position += (Vector3)(dir * moveSpeed * Time.deltaTime);
+        }
+
+        // tick down cooldown
+        if (attackTimer > 0)
+            attackTimer -= Time.deltaTime;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Destroy if hit by projectile
+        // hit the player
+        if (collision.CompareTag("Player") && attackTimer <= 0f)
+        {
+            PlayerController player = collision.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                player.TakeDamage(1f);
+                attackTimer = attackCooldown; // wait before next hit
+            }
+        }
+
+        // hit by projectile -> die and drop rune
         if (collision.CompareTag("Projectile"))
         {
             Instantiate(runePrefab, transform.position, Quaternion.identity);

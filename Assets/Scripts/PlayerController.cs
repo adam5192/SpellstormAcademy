@@ -4,28 +4,31 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("projectiles + upgrades")]
     public GameObject projectilePrefab;
-    public float fireRate = 0.5f; // seconds between shots
+    public float fireRate = 0.5f;  // time between shots
     private float fireTimer = 0f;
 
-    // projectiles and runes
     private int fireRuneCount = 0;
     private int projectileLevel = 1;
 
-    private UIManager uiManager;
-    private float maxHealth = 10f;
-    private float currentHealth;
-
-    [Header("Movement Settings")]
+    [Header("movement")]
     public float moveSpeed = 5f;
-
     private Rigidbody2D rb;
     private Vector2 moveInput;
+
+    [Header("health")]
+    public float maxHealth = 10f;
+    private float currentHealth;
+    private bool isDead = false;
+    private UIManager uiManager;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         currentHealth = maxHealth;
+
+        // grab ui manager for updates
         uiManager = FindObjectOfType<UIManager>();
         if (uiManager != null)
             uiManager.UpdateHealth(currentHealth);
@@ -33,12 +36,12 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // movement input
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
-
         moveInput = new Vector2(moveX, moveY).normalized;
 
-        // handle auto-fire timer
+        // shooting timer
         fireTimer -= Time.deltaTime;
         if (fireTimer <= 0f)
         {
@@ -47,9 +50,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        // smooth physics movement
+        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+    }
+
     void FireProjectile()
     {
-        // Temporary: shoot upward
+        // simple shoot upward for now
         Vector2 shootDir = Vector2.up;
         GameObject proj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         proj.GetComponent<Projectile>().Initialize(shootDir);
@@ -61,7 +70,7 @@ public class PlayerController : MonoBehaviour
         {
             fireRuneCount++;
             uiManager.UpdateRuneUI(fireRuneCount);
-            Debug.Log("Collected Fire Rune! (" + fireRuneCount + "/3)");
+            Debug.Log("collected fire rune (" + fireRuneCount + "/3)");
 
             if (fireRuneCount >= 3)
             {
@@ -71,20 +80,40 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void UpgradeProjectile()
+    public void TakeDamage(float dmg)
     {
-        projectileLevel++;
-        Debug.Log("Projectile Upgraded! Level: " + projectileLevel);
+        if (isDead) return;
 
-        // eg. increase projectile speed and damage
-        Projectile proj = projectilePrefab.GetComponent<Projectile>();
-        proj.speed += 2f;
-        proj.damage += 1;
+        currentHealth -= dmg;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        Debug.Log($"player took {dmg}, hp now {currentHealth}");
+
+        if (uiManager != null)
+        {
+            uiManager.UpdateHealth(currentHealth);
+            uiManager.TriggerDamageFlash(); // flash when hurt
+        }
+
+        if (currentHealth <= 0)
+            Die();
     }
 
 
-    void FixedUpdate()
+    void Die()
     {
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+        isDead = true;
+        Debug.Log("player dead lol");
+        // todo: game over screen
+    }
+
+    void UpgradeProjectile()
+    {
+        projectileLevel++;
+        Debug.Log("projectile upgraded lvl " + projectileLevel);
+
+        // quick stat boost
+        Projectile proj = projectilePrefab.GetComponent<Projectile>();
+        proj.speed += 2f;
+        proj.damage += 1;
     }
 }
