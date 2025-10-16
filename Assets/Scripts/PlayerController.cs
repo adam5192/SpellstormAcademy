@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour
     {
         isDead = true;
         Debug.Log("player dead lol");
-        // todo: game over screen
+        GameManager.instance.GameOver();
     }
 
     void UpgradeProjectile()

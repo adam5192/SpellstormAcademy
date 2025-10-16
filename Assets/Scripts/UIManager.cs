@@ -15,6 +15,9 @@ public class UIManager : MonoBehaviour
     private float flashAlpha = 0f;    // current flash opacity
     private float flashFadeSpeed = 2f; // how fast it fades out
 
+    public GameObject gameOverPanel;
+    public TextMeshProUGUI survivalTimeText;
+
     void Start()
     {
         if (healthBar != null)
@@ -62,4 +65,20 @@ public class UIManager : MonoBehaviour
         c.a = flashAlpha;
         damageFlash.color = c;
     }
+
+    public void ShowGameOverPanel()
+    {
+        if (gameOverPanel == null) return;
+
+        // calculate survival time before showing
+        int minutes = Mathf.FloorToInt(elapsedTime / 60f);
+        int seconds = Mathf.FloorToInt(elapsedTime % 60f);
+
+        if (survivalTimeText != null)
+            survivalTimeText.text = $"You survived {minutes:00}:{seconds:00}";
+
+        gameOverPanel.SetActive(true);
+    }
+
+
 }
