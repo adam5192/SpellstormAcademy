@@ -27,9 +27,6 @@ public class ProjectileBase : MonoBehaviour
         var enemy = other.GetComponent<Enemy>();
         if (enemy == null) return;
 
-        // deal base damage
-        enemy.TakeDamage(damage);
-
         // call element-specific effect
         OnHitEnemy(enemy);
 

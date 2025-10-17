@@ -2,5 +2,11 @@ using UnityEngine;
 
 public class FireProjectile : ProjectileBase
 {
-    // no special effect for fire yet
+    protected override void OnHitEnemy(Enemy enemy)
+    {
+        if (enemy == null) return;
+
+        // tell enemy it was fire damage (for color flash, etc.)
+        enemy.TakeDamage(damage, "Fire");
+    }
 }

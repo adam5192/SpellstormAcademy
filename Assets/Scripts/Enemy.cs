@@ -1,62 +1,119 @@
+using System.Collections;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int maxHealth = 10;  // easy tweak per enemy type
+    [Header("stats")]
+    public int maxHealth = 10;
     int currentHealth;
     bool frozen = false;
     float freezeTimer = 0f;
 
+    [Header("rune drops")]
     public GameObject fireRunePrefab;
     public GameObject iceRunePrefab;
     public GameObject lightningRunePrefab;
 
-    EnemyController controller; // ref to movement/attack script
+    [Header("visual feedback")]
+    SpriteRenderer sr;
+    Color originalColor;
+    bool isFlashing = false;
+
+    EnemyController controller;
 
     void Start()
     {
         currentHealth = maxHealth;
         controller = GetComponent<EnemyController>();
+
+        sr = GetComponent<SpriteRenderer>();
+        if (sr != null)
+            originalColor = sr.color;
     }
 
     void Update()
     {
-        // thaw timer
         if (frozen)
         {
             freezeTimer -= Time.deltaTime;
-            if (freezeTimer <= 0) Unfreeze();
+            if (freezeTimer <= 0)
+                Unfreeze();
         }
     }
 
-    public void TakeDamage(int dmg)
+    // ----------------------------------
+    // take damage (with optional element)
+    // ----------------------------------
+    public void TakeDamage(int dmg, string element = "Normal")
     {
-        // reduce hp, die if 0
         currentHealth -= dmg;
+
+        // choose flash color by element
+        Color flashColor = Color.red;
+        switch (element)
+        {
+            case "Ice": flashColor = Color.cyan; break;
+            case "Lightning": flashColor = Color.yellow; break;
+            case "Fire": flashColor = Color.red; break;
+            default: flashColor = Color.white; break;
+        }
+
+        // start flash
+        if (!isFlashing && sr != null)
+            StartCoroutine(HitFlash(flashColor, 0.1f));
+
         if (currentHealth <= 0)
             Die();
     }
 
+    // ----------------------------------
+    // freeze logic
+    // ----------------------------------
     public void Freeze(float seconds)
     {
-        // stop enemy for a bit
         frozen = true;
         freezeTimer = seconds;
 
+        if (sr != null)
+            sr.color = Color.cyan; // show icy tint
+
         if (controller != null)
-            controller.enabled = false; // stop chasing/attacking
+            controller.enabled = false;
     }
 
     void Unfreeze()
     {
         frozen = false;
+        if (sr != null)
+            sr.color = originalColor;
+
         if (controller != null)
             controller.enabled = true;
     }
 
+    // ----------------------------------
+    // flash coroutine
+    // ----------------------------------
+    IEnumerator HitFlash(Color flashColor, float duration)
+    {
+        isFlashing = true;
+        sr.color = flashColor;
+
+        // optional: small scale pop for extra feedback
+        transform.localScale *= 1.1f;
+
+        yield return new WaitForSeconds(duration);
+
+        transform.localScale /= 1.1f;
+        sr.color = originalColor;
+        isFlashing = false;
+    }
+
+    // ----------------------------------
+    // death + rune drop
+    // ----------------------------------
     void Die()
     {
-        // pick one rune at random
         GameObject[] runes = { fireRunePrefab, iceRunePrefab, lightningRunePrefab };
         int randomIndex = Random.Range(0, runes.Length);
 
@@ -66,4 +123,3 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 }
-
