@@ -61,23 +61,16 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // classic top-down movement (same as your old code)
+        // classic top-down movement
         rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
     }
 
-    // -----------------------------
-    // movement input (wasd/arrows)
-    // -----------------------------
     void HandleMovementInput()
     {
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
         moveInput = new Vector2(moveX, moveY).normalized;
     }
-
-    // -----------------------------
-    // auto-firing logic (like old code)
-    // -----------------------------
     void HandleAutoFire()
     {
         fireTimer -= Time.deltaTime;
@@ -106,9 +99,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // -----------------------------
     // spawns a projectile toward neares enemy
-    // -----------------------------
     void Shoot(GameObject prefab)
     {
         if (prefab == null) return;
@@ -125,7 +116,7 @@ public class PlayerController : MonoBehaviour
         // spawn projectile
         GameObject proj = Instantiate(prefab, transform.position, Quaternion.identity);
 
-        // rotate projectile sprite to face target (optional visual)
+        // rotate projectile sprite to face target
         float angle = Mathf.Atan2(shootDir.y, shootDir.x) * Mathf.Rad2Deg - 90f;
         proj.transform.rotation = Quaternion.Euler(0, 0, angle);
 
@@ -155,10 +146,6 @@ public class PlayerController : MonoBehaviour
         return nearest;
     }
 
-
-    // -----------------------------
-    // handle button press specials
-    // -----------------------------
     void HandleSpecials()
     {
         // left click = fire special
@@ -197,9 +184,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // -----------------------------
     // rune pickup
-    // -----------------------------
     public void AddRune(string type)
     {
         xp++;
@@ -222,9 +207,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // -----------------------------
     // damage + death
-    // -----------------------------
     public void TakeDamage(float dmg)
     {
         if (isDead) return;
