@@ -46,13 +46,5 @@ public class EnemyController : MonoBehaviour
                 attackTimer = attackCooldown; // wait before next hit
             }
         }
-
-        // hit by projectile -> die and drop rune
-        if (collision.CompareTag("Projectile"))
-        {
-            Instantiate(runePrefab, transform.position, Quaternion.identity);
-            Destroy(gameObject);
-            Destroy(collision.gameObject);
-        }
     }
 }

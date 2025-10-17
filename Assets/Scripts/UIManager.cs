@@ -5,7 +5,9 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public TextMeshProUGUI timerText;
-    public TextMeshProUGUI runeText;
+    public TextMeshProUGUI fireRuneText;
+    public TextMeshProUGUI iceRuneText;
+    public TextMeshProUGUI lightningRuneText;
     public Slider healthBar;
     public Image damageFlash;         // red overlay image
 
@@ -46,9 +48,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateRuneUI(int count)
+    public void UpdateRuneUI(int fireCount, int iceCount, int lightningCount)
     {
-        runeText.text = "Runes: " + count + "/3";
+        fireRuneText.text = "Fire Runes: " + fireCount + "/5";
+        iceRuneText.text = "Ice Runes: " + iceCount + "/5";
+        lightningRuneText.text = "Lightning Runes: " + lightningCount + "/5";
     }
 
     public void UpdateHealth(float newValue)
