@@ -151,7 +151,8 @@ public class PlayerController : MonoBehaviour
         // left click = fire special
         if (Input.GetMouseButtonDown(0) && fireRunes >= 5)
         {
-            Instantiate(fireSpecial, transform.position, Quaternion.identity);
+            GameObject special = Instantiate(fireSpecial, transform.position, transform.rotation);
+            special.GetComponent<FireSpecial>()?.SetDirection(transform.up);
             fireRunes -= 5;
             UpdateRuneUI();
         }
@@ -159,7 +160,8 @@ public class PlayerController : MonoBehaviour
         // right click = ice special
         if (Input.GetMouseButtonDown(1) && iceRunes >= 5)
         {
-            Instantiate(iceSpecial, transform.position, Quaternion.identity);
+            GameObject special = Instantiate(iceSpecial, transform.position, transform.rotation);
+            special.GetComponent<IceSpecial>()?.SetDirection(transform.up);
             iceRunes -= 5;
             UpdateRuneUI();
         }
@@ -176,7 +178,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) &&
             fireRunes >= 5 && iceRunes >= 5 && lightningRunes >= 5)
         {
-            Instantiate(comboSpecial, transform.position, Quaternion.identity);
+            GameObject special = Instantiate(comboSpecial, transform.position, transform.rotation);
+            special.GetComponent<ComboSpecial>()?.SetDirection(transform.up);
             fireRunes -= 5;
             iceRunes -= 5;
             lightningRunes -= 5;

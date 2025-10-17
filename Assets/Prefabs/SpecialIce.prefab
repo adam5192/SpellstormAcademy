@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 176074372008248748}
   - component: {fileID: 4630145249463059308}
   - component: {fileID: 2986749741254095174}
-  - component: {fileID: 220554960433816184}
+  - component: {fileID: -3938876822887413287}
   m_Layer: 0
   m_Name: SpecialIce
   m_TagString: Projectile
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 5762414259164373940}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.2103742, y: -1.1380677, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -149,7 +149,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &220554960433816184
+--- !u!114 &-3938876822887413287
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -158,9 +158,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5762414259164373940}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b6a78f52c243fc41ad59080f0d99d79, type: 3}
+  m_Script: {fileID: 11500000, guid: b8cb220905a0ab348a168afbe46d6ace, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  lifetime: 2
-  damage: 1
+  radius: 4
+  freezeTime: 3
+  lifetime: 0.5
