@@ -9,5 +9,6 @@ public class IceProjectile : ProjectileBase
     {
         if (enemy == null) return;
         enemy.Freeze(freezeTime);
+        enemy.TakeDamage(damage, "Ice");
     }
 }

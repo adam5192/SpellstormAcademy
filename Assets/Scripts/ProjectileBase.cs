@@ -34,6 +34,6 @@ public class ProjectileBase : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // this will be overridden by subclasses for extra effects
+    // will be overridden by subclasses for extra effects
     protected virtual void OnHitEnemy(Enemy enemy) { }
 }

@@ -162,6 +162,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  damage: 3
+  damage: 20
   lifetime: 2
   bonusDamage: 5

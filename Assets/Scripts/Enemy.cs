@@ -41,9 +41,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // ----------------------------------
     // take damage (with optional element)
-    // ----------------------------------
     public void TakeDamage(int dmg, string element = "Normal")
     {
         currentHealth -= dmg;
@@ -66,9 +64,7 @@ public class Enemy : MonoBehaviour
             Die();
     }
 
-    // ----------------------------------
     // freeze logic
-    // ----------------------------------
     public void Freeze(float seconds)
     {
         frozen = true;
@@ -91,9 +87,7 @@ public class Enemy : MonoBehaviour
             controller.enabled = true;
     }
 
-    // ----------------------------------
     // flash coroutine
-    // ----------------------------------
     IEnumerator HitFlash(Color flashColor, float duration)
     {
         isFlashing = true;
@@ -109,9 +103,7 @@ public class Enemy : MonoBehaviour
         isFlashing = false;
     }
 
-    // ----------------------------------
     // death + rune drop
-    // ----------------------------------
     void Die()
     {
         GameObject[] runes = { fireRunePrefab, iceRunePrefab, lightningRunePrefab };

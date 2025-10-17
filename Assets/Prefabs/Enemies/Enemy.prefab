@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8448eceae1a4f2a468a6ab66ab82892f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
+  maxHealth: 6
   fireRunePrefab: {fileID: 5579034602638980689, guid: b691146c8c9100244aaa956a8599c913, type: 3}
   iceRunePrefab: {fileID: 5579034602638980689, guid: e9c450cbf4f8d824ea8c5266bbcc0d19, type: 3}
   lightningRunePrefab: {fileID: 5579034602638980689, guid: 81070ba0f89956e4194cffb795af16d6, type: 3}
