@@ -23,6 +23,12 @@ public class EnemySpawner : MonoBehaviour
     public float positionNoise = 1.5f;
     public float laneSpacing = 2.2f;
 
+    [Header("arena bounds")]
+    public float minX = -24.6f;         // left wall x
+    public float maxX = 24.6f;          // right wall x
+    public float minY = -14.6f;         // bottom wall y
+    public float maxY = 14.6f;          // top wall y
+
     [Header("difficulty scaling")]
     public float rampInterval = 8f;
     private float rampTimer;
@@ -125,7 +131,7 @@ public class EnemySpawner : MonoBehaviour
 
         Vector2 dir = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)).normalized;
 
-        // spawn just outside the visible area
+        // spawn just outside the visible area around the player
         float spawnDistance = Mathf.Max(camWidth, camHeight) * 0.35f + edgeBuffer;
 
         Vector2 spawnBase = playerPos2D + dir * spawnDistance;
@@ -133,9 +139,14 @@ public class EnemySpawner : MonoBehaviour
         Vector2 perpendicular = new Vector2(-dir.y, dir.x);
         spawnBase += perpendicular * laneOffset;
 
+        // small random offset
         spawnBase += Random.insideUnitCircle * positionNoise;
 
-        return spawnBase;
+        // clamp inside arena bounds so enemies never spawn past walls
+        float clampedX = Mathf.Clamp(spawnBase.x, minX + 0.5f, maxX - 0.5f);
+        float clampedY = Mathf.Clamp(spawnBase.y, minY + 0.5f, maxY - 0.5f);
+
+        return new Vector2(clampedX, clampedY);
     }
 
     GameObject GetRandomEnemyPrefab()
