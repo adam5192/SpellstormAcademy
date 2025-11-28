@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6023799280755869844}
   - component: {fileID: 4821387274649022278}
   - component: {fileID: -2781178520655023544}
-  - component: {fileID: -4971682151722363467}
+  - component: {fileID: -3803364644440059074}
   m_Layer: 0
   m_Name: Enemy_Tank
   m_TagString: Enemy
@@ -167,8 +167,8 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!68 &-4971682151722363467
-EdgeCollider2D:
+--- !u!58 &-3803364644440059074
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -196,30 +196,9 @@ EdgeCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
-  m_Points:
-  - {x: 1.0434389, y: 0.007208824}
-  - {x: 0.9648615, y: -0.2501806}
-  - {x: 0.36950564, y: -0.2691487}
-  - {x: 0.031602263, y: -0.28826797}
-  - {x: 0.030256867, y: -0.82381606}
-  - {x: -0.7863648, y: -0.8589748}
-  - {x: -0.82185984, y: -0.4986266}
-  - {x: -1.066362, y: -0.48230124}
-  - {x: -1.0312518, y: -0.34680843}
-  - {x: -0.9003104, y: -0.20475459}
-  - {x: -0.9290587, y: 0.29744792}
-  - {x: -0.60416305, y: 0.79701704}
-  - {x: -0.16562426, y: 0.8362591}
-  - {x: 0.21140087, y: 0.6642996}
-  - {x: 0.35118914, y: 0.10382438}
-  - {x: 0.90926266, y: 0.21130311}
-  - {x: 1.04, y: 0}
-  m_AdjacentStartPoint: {x: 0, y: 0}
-  m_AdjacentEndPoint: {x: 0, y: 0}
-  m_UseAdjacentStartPoint: 0
-  m_UseAdjacentEndPoint: 0
+  m_Offset: {x: 0.00000011920929, y: -0.005117178}
+  serializedVersion: 2
+  m_Radius: 0.87113357

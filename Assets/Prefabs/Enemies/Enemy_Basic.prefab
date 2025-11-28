@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6023799280755869844}
   - component: {fileID: 4821387274649022278}
   - component: {fileID: -1412592405187032295}
-  - component: {fileID: 8732957460516045614}
+  - component: {fileID: 4312329723557900946}
   m_Layer: 0
   m_Name: Enemy_Basic
   m_TagString: Enemy
@@ -167,8 +167,8 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!68 &8732957460516045614
-EdgeCollider2D:
+--- !u!58 &4312329723557900946
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -199,27 +199,6 @@ EdgeCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
-  m_Points:
-  - {x: -1.1, y: 0}
-  - {x: -1.1059184, y: 0.2507788}
-  - {x: -0.76070607, y: 0.78579533}
-  - {x: -0.11411023, y: 0.76970357}
-  - {x: 0.12945998, y: 0.41008687}
-  - {x: 0.2217744, y: 0.12520647}
-  - {x: 0.6051567, y: 0.37035906}
-  - {x: 0.98939615, y: 0.1744672}
-  - {x: 1.1273057, y: 0.15995574}
-  - {x: 1.1331958, y: -0.24381661}
-  - {x: 0.6087419, y: -0.6223401}
-  - {x: 0.3236031, y: -0.32291818}
-  - {x: 0.083198905, y: -0.58829737}
-  - {x: -0.08609021, y: -0.78960633}
-  - {x: -0.7865236, y: -0.801507}
-  - {x: -1.1657054, y: -0.44875562}
-  - {x: -1.1059935, y: 0.050463915}
-  m_AdjacentStartPoint: {x: 0, y: 0}
-  m_AdjacentEndPoint: {x: 0, y: 0}
-  m_UseAdjacentStartPoint: 0
-  m_UseAdjacentEndPoint: 0
+  m_Offset: {x: -0.14620467, y: -0.0073101693}
+  serializedVersion: 2
+  m_Radius: 0.9318644

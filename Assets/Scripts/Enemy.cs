@@ -20,6 +20,7 @@ public class Enemy : MonoBehaviour
     bool isFlashing = false;
 
     EnemyController controller;
+    private Animator anim;
 
     void Start()
     {
@@ -29,6 +30,10 @@ public class Enemy : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         if (sr != null)
             originalColor = sr.color;
+    }
+    void Awake()
+    {
+        anim = GetComponentInChildren<Animator>();
     }
 
     void Update()
@@ -75,6 +80,10 @@ public class Enemy : MonoBehaviour
 
         if (controller != null)
             controller.enabled = false;
+
+            // stop animation
+    if (anim != null)
+        anim.speed = 0f;
     }
 
     void Unfreeze()
@@ -85,6 +94,10 @@ public class Enemy : MonoBehaviour
 
         if (controller != null)
             controller.enabled = true;
+
+        // resume animation
+        if (anim != null)
+            anim.speed = 1f;
     }
 
     // flash coroutine
@@ -99,9 +112,16 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(duration);
 
         transform.localScale /= 1.1f;
-        sr.color = originalColor;
+
+        // if still frozen, keep icy tint
+        if (frozen)
+            sr.color = Color.cyan;
+        else
+            sr.color = originalColor;
+
         isFlashing = false;
     }
+
 
     // death + rune drop
     void Die()
