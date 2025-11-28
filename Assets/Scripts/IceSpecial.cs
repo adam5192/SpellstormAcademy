@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class IceSpecial : MonoBehaviour
@@ -10,6 +11,7 @@ public class IceSpecial : MonoBehaviour
 
     private Vector2 moveDir;
     private float hitRadius;
+    private HashSet<Enemy> hitEnemies = new HashSet<Enemy>();
 
     void Start()
     {
@@ -40,12 +42,14 @@ public class IceSpecial : MonoBehaviour
             if (hit.CompareTag("Enemy"))
             {
                 Enemy e = hit.GetComponent<Enemy>();
-                if (e != null)
+                if (e != null && !hitEnemies.Contains(e))
                 {
+                    hitEnemies.Add(e);
+
                     e.Freeze(freezeTime); // freeze instead of damage
 
                     if (hitEffect != null)
-                        Instantiate(hitEffect, hit.transform.position, Quaternion.identity);
+                        Instantiate(hitEffect, e.transform.position, Quaternion.identity);
                 }
             }
         }

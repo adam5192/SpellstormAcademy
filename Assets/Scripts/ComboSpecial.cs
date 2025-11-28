@@ -1,15 +1,17 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ComboSpecial : MonoBehaviour
 {
-    [Header("fire settings")]
+    [Header("combo settings")]
     public float speed = 12f;
-    public int damage = 20;
+    public int damage = 30;
     public float lifetime = 3f;
     public GameObject hitEffect;
 
-    private Vector2 moveDir; // stores direction given by player
+    private Vector2 moveDir; // direction given by player
     private float hitRadius;
+    private HashSet<Enemy> hitEnemies = new HashSet<Enemy>();
 
     void Start()
     {
@@ -43,12 +45,14 @@ public class ComboSpecial : MonoBehaviour
             if (hit.CompareTag("Enemy"))
             {
                 Enemy e = hit.GetComponent<Enemy>();
-                if (e != null)
+                if (e != null && !hitEnemies.Contains(e))
                 {
+                    hitEnemies.Add(e);
+
                     e.TakeDamage(damage, "Fire");
 
                     if (hitEffect != null)
-                        Instantiate(hitEffect, hit.transform.position, Quaternion.identity);
+                        Instantiate(hitEffect, e.transform.position, Quaternion.identity);
                 }
             }
         }

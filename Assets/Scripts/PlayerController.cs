@@ -21,9 +21,9 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
 
     [Header("fire rates (seconds per shot)")]
-    public float fireRate = 0.5f;
-    public float iceRate = 1f;
-    public float lightningRate = 3f;
+    public float fireRate = 0.25f;
+    public float iceRate = 0.8f;
+    public float lightningRate = 2f;
 
     private float fireTimer = 0f;
     private float iceTimer = 0f;
@@ -71,59 +71,66 @@ public class PlayerController : MonoBehaviour
         float moveY = Input.GetAxisRaw("Vertical");
         moveInput = new Vector2(moveX, moveY).normalized;
     }
+
     void HandleAutoFire()
     {
         fireTimer -= Time.deltaTime;
         iceTimer -= Time.deltaTime;
         lightningTimer -= Time.deltaTime;
 
+        // aim once per frame at nearest enemy
+        Vector2 shootDir = GetAimDirection();
+
         // fire (basic)
         if (fireTimer <= 0f)
         {
-            Shoot(fireProjectile);
+            Shoot(fireProjectile, shootDir);
             fireTimer = fireRate;
         }
 
         // ice
         if (iceTimer <= 0f)
         {
-            Shoot(iceProjectile);
+            Shoot(iceProjectile, shootDir);
             iceTimer = iceRate;
         }
 
         // lightning
         if (lightningTimer <= 0f)
         {
-            Shoot(lightningProjectile);
+            Shoot(lightningProjectile, shootDir);
             lightningTimer = lightningRate;
         }
     }
 
-    // spawns a projectile toward neares enemy
-    void Shoot(GameObject prefab)
+    // spawns a projectile toward given direction
+    void Shoot(GameObject prefab, Vector2 dir)
     {
         if (prefab == null) return;
 
-        // find the nearest enemy
-        GameObject nearestEnemy = FindNearestEnemy();
-        Vector2 shootDir = Vector2.up; // default dir (no enemies)
-
-        if (nearestEnemy != null)
-        {
-            shootDir = (nearestEnemy.transform.position - transform.position).normalized;
-        }
-
-        // spawn projectile
         GameObject proj = Instantiate(prefab, transform.position, Quaternion.identity);
 
-        // rotate projectile sprite to face target
-        float angle = Mathf.Atan2(shootDir.y, shootDir.x) * Mathf.Rad2Deg - 90f;
-        proj.transform.rotation = Quaternion.Euler(0, 0, angle);
+        // let projectile base handle movement + rotation
+        ProjectileBase pb = proj.GetComponent<ProjectileBase>();
+        if (pb != null)
+            pb.SetDirection(dir);
+    }
 
-        // apply movement
-        Rigidbody2D rbProj = proj.GetComponent<Rigidbody2D>();
-        if (rbProj != null)
-            rbProj.velocity = shootDir * 10f; // tweak speed if needed
+    // get direction toward nearest enemy, or up if none
+    Vector2 GetAimDirection()
+    {
+        GameObject nearestEnemy = FindNearestEnemy();
+        if (nearestEnemy == null)
+            return Vector2.up;
+
+        Vector2 playerPos = transform.position;
+        Vector2 enemyPos = nearestEnemy.transform.position;
+        Vector2 dir = (enemyPos - playerPos);
+
+        if (dir.sqrMagnitude < 0.001f)
+            return Vector2.up;
+
+        return dir.normalized;
     }
 
     GameObject FindNearestEnemy()
@@ -146,13 +153,16 @@ public class PlayerController : MonoBehaviour
         return nearest;
     }
 
+    // specials now aim at mouse position
     void HandleSpecials()
     {
+        Vector2 mouseDir = GetMouseDirection();
+
         // left click = fire special
         if (Input.GetMouseButtonDown(0) && fireRunes >= 5)
         {
-            GameObject special = Instantiate(fireSpecial, transform.position, transform.rotation);
-            special.GetComponent<FireSpecial>()?.SetDirection(transform.up);
+            GameObject special = Instantiate(fireSpecial, transform.position, Quaternion.identity);
+            special.GetComponent<FireSpecial>()?.SetDirection(mouseDir);
             fireRunes -= 5;
             UpdateRuneUI();
         }
@@ -160,13 +170,13 @@ public class PlayerController : MonoBehaviour
         // right click = ice special
         if (Input.GetMouseButtonDown(1) && iceRunes >= 5)
         {
-            GameObject special = Instantiate(iceSpecial, transform.position, transform.rotation);
-            special.GetComponent<IceSpecial>()?.SetDirection(transform.up);
+            GameObject special = Instantiate(iceSpecial, transform.position, Quaternion.identity);
+            special.GetComponent<IceSpecial>()?.SetDirection(mouseDir);
             iceRunes -= 5;
             UpdateRuneUI();
         }
 
-        // middle click = lightning special
+        // middle click = lightning special (aoe)
         if (Input.GetMouseButtonDown(2) && lightningRunes >= 5)
         {
             Instantiate(lightningSpecial, transform.position, Quaternion.identity);
@@ -178,13 +188,26 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) &&
             fireRunes >= 5 && iceRunes >= 5 && lightningRunes >= 5)
         {
-            GameObject special = Instantiate(comboSpecial, transform.position, transform.rotation);
-            special.GetComponent<ComboSpecial>()?.SetDirection(transform.up);
+            GameObject special = Instantiate(comboSpecial, transform.position, Quaternion.identity);
+            special.GetComponent<ComboSpecial>()?.SetDirection(mouseDir);
             fireRunes -= 5;
             iceRunes -= 5;
             lightningRunes -= 5;
             UpdateRuneUI();
         }
+    }
+
+    // direction from player to mouse in world space
+    Vector2 GetMouseDirection()
+    {
+        Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mouseWorld.z = 0f;
+
+        Vector2 dir = (mouseWorld - transform.position);
+        if (dir.sqrMagnitude < 0.001f)
+            return Vector2.up;
+
+        return dir.normalized;
     }
 
     // rune pickup

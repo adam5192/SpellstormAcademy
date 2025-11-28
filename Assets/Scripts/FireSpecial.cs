@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FireSpecial : MonoBehaviour
@@ -8,8 +9,9 @@ public class FireSpecial : MonoBehaviour
     public float lifetime = 3f;
     public GameObject hitEffect;
 
-    private Vector2 moveDir; // stores direction given by player
+    private Vector2 moveDir; // direction given by player
     private float hitRadius;
+    private HashSet<Enemy> hitEnemies = new HashSet<Enemy>();
 
     void Start()
     {
@@ -21,7 +23,7 @@ public class FireSpecial : MonoBehaviour
     {
         moveDir = dir.normalized;
 
-        // rotate the projectile so it points the correct way
+        // rotate projectile so it points the correct way
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
         transform.rotation = Quaternion.Euler(0, 0, angle);
     }
@@ -43,12 +45,14 @@ public class FireSpecial : MonoBehaviour
             if (hit.CompareTag("Enemy"))
             {
                 Enemy e = hit.GetComponent<Enemy>();
-                if (e != null)
+                if (e != null && !hitEnemies.Contains(e))
                 {
+                    hitEnemies.Add(e);
+
                     e.TakeDamage(damage, "Fire");
 
                     if (hitEffect != null)
-                        Instantiate(hitEffect, hit.transform.position, Quaternion.identity);
+                        Instantiate(hitEffect, e.transform.position, Quaternion.identity);
                 }
             }
         }
