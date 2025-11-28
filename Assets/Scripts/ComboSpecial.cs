@@ -9,9 +9,10 @@ public class ComboSpecial : MonoBehaviour
     public float lifetime = 3f;
     public GameObject hitEffect;
 
-    private Vector2 moveDir; // direction given by player
+    private Vector2 moveDir;
     private float hitRadius;
     private HashSet<Enemy> hitEnemies = new HashSet<Enemy>();
+    private bool triggeredBigFeedback = false;
 
     void Start()
     {
@@ -23,17 +24,13 @@ public class ComboSpecial : MonoBehaviour
     {
         moveDir = dir.normalized;
 
-        // rotate the projectile so it points the correct way
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
         transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     void Update()
     {
-        // move in the assigned direction
         transform.Translate(moveDir * speed * Time.deltaTime, Space.World);
-
-        // deal damage while moving
         CheckHits();
     }
 
@@ -53,6 +50,18 @@ public class ComboSpecial : MonoBehaviour
 
                     if (hitEffect != null)
                         Instantiate(hitEffect, e.transform.position, Quaternion.identity);
+
+                    // only do big shake/pause once, on first hit
+                    if (!triggeredBigFeedback)
+                    {
+                        triggeredBigFeedback = true;
+
+                        if (CameraShake.instance != null)
+                            CameraShake.instance.Shake(0.18f, 0.4f);
+
+                        if (HitPause.instance != null)
+                            HitPause.instance.DoHitPause(0.015f);
+                    }
                 }
             }
         }

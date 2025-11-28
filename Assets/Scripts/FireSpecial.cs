@@ -53,6 +53,10 @@ public class FireSpecial : MonoBehaviour
 
                     if (hitEffect != null)
                         Instantiate(hitEffect, e.transform.position, Quaternion.identity);
+
+                    // subtle shake + tiny pause on special hit
+                    if (CameraShake.instance != null)
+                        CameraShake.instance.Shake(0.08f, 0.2f);
                 }
             }
         }

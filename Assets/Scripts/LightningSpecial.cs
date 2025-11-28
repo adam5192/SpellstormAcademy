@@ -7,11 +7,11 @@ public class LightningSpecial : MonoBehaviour
     public float radius = 5f;          // damage radius
     public int damage = 25;            // damage dealt to each enemy
     public float flashDuration = 0.25f;
-    public Color flashColor = new Color(1f, 1f, 0f, 0.35f); // semi-transparent yellow
+    public Color flashColor = new Color(1f, 1f, 0f, 0.35f);
 
     [Header("visuals")]
-    public Sprite circleSprite;    
-    public float visualFadeSpeed = 4f; // how fast the circle fades away
+    public Sprite circleSprite;
+    public float visualFadeSpeed = 4f;
 
     private SpriteRenderer sr;
 
@@ -29,6 +29,10 @@ public class LightningSpecial : MonoBehaviour
             }
         }
 
+        // medium shake + medium pause
+        if (CameraShake.instance != null)
+            CameraShake.instance.Shake(0.12f, 0.3f);
+
         // create and animate the visual flash
         CreateFlashVisual();
 
@@ -41,7 +45,7 @@ public class LightningSpecial : MonoBehaviour
         GameObject circle = new GameObject("LightningFlash");
         circle.transform.SetParent(transform);
         circle.transform.localPosition = Vector3.zero;
-        circle.transform.localScale = Vector3.one * radius * 2f; // diameter in world units
+        circle.transform.localScale = Vector3.one * radius * 2f;
 
         sr = circle.AddComponent<SpriteRenderer>();
         sr.sprite = circleSprite;
@@ -56,7 +60,7 @@ public class LightningSpecial : MonoBehaviour
 
         while (elapsed < flashDuration)
         {
-            elapsed += Time.deltaTime * visualFadeSpeed;
+            elapsed += Time.unscaledDeltaTime;
             float alpha = Mathf.Lerp(startColor.a, 0, elapsed / flashDuration);
             sr.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
             yield return null;

@@ -247,6 +247,13 @@ public class PlayerController : MonoBehaviour
             ui.TriggerDamageFlash();
         }
 
+        // small shake + pause when player is hit
+        if (CameraShake.instance != null)
+            CameraShake.instance.Shake(0.15f, 0.25f);
+
+        if (HitPause.instance != null)
+            HitPause.instance.DoHitPause(0.05f);
+
         if (currentHealth <= 0)
             Die();
     }
@@ -260,4 +267,5 @@ public class PlayerController : MonoBehaviour
         Debug.Log("player died");
         enabled = false;
     }
+
 }
