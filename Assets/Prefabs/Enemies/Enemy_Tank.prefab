@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 1257424615929467599}
   - component: {fileID: 4741968979072478516}
   - component: {fileID: 7608593947956410603}
-  - component: {fileID: 6455926037638430989}
   - component: {fileID: 6023799280755869844}
   - component: {fileID: 4821387274649022278}
+  - component: {fileID: -2781178520655023544}
+  - component: {fileID: -4971682151722363467}
   m_Layer: 0
   m_Name: Enemy_Tank
   m_TagString: Enemy
@@ -30,11 +31,11 @@ Transform:
   m_GameObject: {fileID: 4270377517579404509}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.2103742, y: -1.1380677, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4741968979072478516
 SpriteRenderer:
@@ -77,8 +78,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.6093052, g: 0, b: 0.745283, a: 1}
+  m_Sprite: {fileID: 84378273, guid: 9ad8d1448e0b7584d913d29ced3c58e1, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -115,8 +116,59 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &6455926037638430989
-BoxCollider2D:
+--- !u!114 &6023799280755869844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4270377517579404509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35909c23c64ad6d47a8e5672055d0c07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 1.4
+  runePrefab: {fileID: 5579034602638980689, guid: b691146c8c9100244aaa956a8599c913, type: 3}
+--- !u!114 &4821387274649022278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4270377517579404509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8448eceae1a4f2a468a6ab66ab82892f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 20
+  fireRunePrefab: {fileID: 5579034602638980689, guid: b691146c8c9100244aaa956a8599c913, type: 3}
+  iceRunePrefab: {fileID: 5579034602638980689, guid: e9c450cbf4f8d824ea8c5266bbcc0d19, type: 3}
+  lightningRunePrefab: {fileID: 5579034602638980689, guid: 81070ba0f89956e4194cffb795af16d6, type: 3}
+--- !u!95 &-2781178520655023544
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4270377517579404509}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d23bd9865931b1747865163378aa2b34, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!68 &-4971682151722363467
+EdgeCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -148,45 +200,26 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &6023799280755869844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4270377517579404509}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35909c23c64ad6d47a8e5672055d0c07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 1.4
-  runePrefab: {fileID: 5579034602638980689, guid: b691146c8c9100244aaa956a8599c913, type: 3}
---- !u!114 &4821387274649022278
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4270377517579404509}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8448eceae1a4f2a468a6ab66ab82892f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 20
-  fireRunePrefab: {fileID: 5579034602638980689, guid: b691146c8c9100244aaa956a8599c913, type: 3}
-  iceRunePrefab: {fileID: 5579034602638980689, guid: e9c450cbf4f8d824ea8c5266bbcc0d19, type: 3}
-  lightningRunePrefab: {fileID: 5579034602638980689, guid: 81070ba0f89956e4194cffb795af16d6, type: 3}
+  m_Points:
+  - {x: 1.0434389, y: 0.007208824}
+  - {x: 0.9648615, y: -0.2501806}
+  - {x: 0.36950564, y: -0.2691487}
+  - {x: 0.031602263, y: -0.28826797}
+  - {x: 0.030256867, y: -0.82381606}
+  - {x: -0.7863648, y: -0.8589748}
+  - {x: -0.82185984, y: -0.4986266}
+  - {x: -1.066362, y: -0.48230124}
+  - {x: -1.0312518, y: -0.34680843}
+  - {x: -0.9003104, y: -0.20475459}
+  - {x: -0.9290587, y: 0.29744792}
+  - {x: -0.60416305, y: 0.79701704}
+  - {x: -0.16562426, y: 0.8362591}
+  - {x: 0.21140087, y: 0.6642996}
+  - {x: 0.35118914, y: 0.10382438}
+  - {x: 0.90926266, y: 0.21130311}
+  - {x: 1.04, y: 0}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0

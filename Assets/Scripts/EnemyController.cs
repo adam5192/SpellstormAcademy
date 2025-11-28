@@ -10,6 +10,13 @@ public class EnemyController : MonoBehaviour
     private float attackCooldown = 1f;    // delay between hits
     private float attackTimer = 0f;       // timer for that delay
     private float stopDistance = 0.5f;    // how close to stop from player
+    private SpriteRenderer spriteRenderer;
+
+    void Awake()
+    {
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+    }
+
 
     void Start()
     {
@@ -51,8 +58,24 @@ public class EnemyController : MonoBehaviour
         // attack cooldown tick
         if (attackTimer > 0)
             attackTimer -= Time.deltaTime;
+
+        FlipSprite();
     }
 
+    void FlipSprite()
+    {
+        Vector2 dir = player.position - transform.position;
+
+        // prevent flickering when extremely close
+        if (Mathf.Abs(dir.x) > 0.1f)
+        {
+            // flip horizontally based on x direction
+            if (dir.x > 0)
+                spriteRenderer.flipX = false;
+            else
+                spriteRenderer.flipX = true;
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
