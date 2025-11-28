@@ -3,42 +3,43 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("References")]
-    public GameObject enemyPrefab;
+    [Header("references")]
+    public GameObject basicEnemyPrefab;
+    public GameObject fastEnemyPrefab;
+    public GameObject tankEnemyPrefab;
     private PlayerController player;
     private Camera mainCam;
 
-    [Header("Spawn Control")]
-    public int minEnemies = 10;        
-    public int maxEnemies = 60;         // hard cap to avoid lag
-    public int baseWaveSize = 3;        // enemies per ewave
-    public float spawnDelay = 0.04f;    // small delay between enemies in a wave
-    public float checkInterval = 0.4f;  // how often check for spawn
+    [Header("spawn control")]
+    public int minEnemies = 18;         // keep at least this many
+    public int maxEnemies = 90;         // hard cap to avoid lag
+    public int baseWaveSize = 10;       // enemies per spawn cycle
+    public float spawnDelay = 0.02f;    // delay between enemies in a lane
+    public float checkInterval = 0.2f;  // how often to check population
+    private float checkTimer = 0f;
 
-    [Header("Spawn Placement")]
-    public float edgeBuffer = 2f;       // how far outside the screen to spawn
-    public float positionNoise = 1.5f;  // add some randomness to avoid perfect lines
-    public float laneSpacing = 2.5f;    // distance between multi-lane spawns
+    [Header("spawn placement")]
+    public float edgeBuffer = 1.2f;     // how far outside the screen to spawn
+    public float positionNoise = 1.5f;
+    public float laneSpacing = 2.2f;
 
-    [Header("Difficulty Scaling")]
-    public float rampInterval = 10f;    // how often difficulty ramps up (seconds)
+    [Header("difficulty scaling")]
+    public float rampInterval = 8f;
     private float rampTimer;
-    public float rampMultiplier = 1.15f; // scaling factor per ramp
+    public float rampMultiplier = 1.18f;
 
-    [Header("Direction Persistence")]
-    public float directionChangeInterval = 7f; // how long waves come from the same side
-    private float currentWaveAngle;
-    private float directionTimer;
+    [Header("wave variety")]
+    public int minDirections = 2;       // how many angles per wave
+    public int maxDirections = 4;
 
-    [Header("Wave Variety")]
-    public float multiWaveChance = 0.4f;  // 40% chance to spawn a secondary wave
-    public float secondaryWaveDelay = 2f; // delay before secondary wave spawns
+    [Header("enemy type chances")]
+    [Range(0f, 1f)] public float fastChance = 0.2f;
+    [Range(0f, 1f)] public float tankChance = 0.1f;
 
     void Start()
     {
         player = FindObjectOfType<PlayerController>();
         mainCam = Camera.main;
-        currentWaveAngle = Random.Range(0f, 360f);
     }
 
     void Update()
@@ -46,42 +47,47 @@ public class EnemySpawner : MonoBehaviour
         if (player == null || mainCam == null) return;
 
         rampTimer += Time.deltaTime;
-        directionTimer += Time.deltaTime;
+        checkTimer += Time.deltaTime;
 
-        // ramp difficulty a bit faster over time
+        // ramp difficulty over time
         if (rampTimer >= rampInterval)
         {
             rampTimer = 0f;
 
-            // scale counts slightly each interval
-            minEnemies = Mathf.CeilToInt(minEnemies * rampMultiplier);
-            maxEnemies = Mathf.CeilToInt(maxEnemies * rampMultiplier);
+            // slowly increase enemy counts
+            minEnemies = Mathf.Min(Mathf.CeilToInt(minEnemies * rampMultiplier), 40);
+            maxEnemies = Mathf.Min(Mathf.CeilToInt(maxEnemies * rampMultiplier), 120);
 
-            // slightly grow the wave size too, capped so it stays reasonable
-            baseWaveSize = Mathf.Min(baseWaveSize + 1, 10);
+            // increase wave size a bit
+            baseWaveSize = Mathf.Min(baseWaveSize + 2, 18);
         }
 
-        // rotate spawn direction every few seconds for variety
-        if (directionTimer >= directionChangeInterval)
-        {
-            directionTimer = 0f;
-            currentWaveAngle += Random.Range(70f, 130f); // switch to another sector
-        }
+        if (checkTimer < checkInterval)
+            return;
+        checkTimer = 0f;
 
-        // keep checking population often for steady flow
         int activeEnemies = CountActiveEnemies();
 
         if (activeEnemies < minEnemies)
         {
             int toSpawn = Mathf.Min(baseWaveSize, maxEnemies - activeEnemies);
-            StartCoroutine(SpawnMultiLaneWave(toSpawn, currentWaveAngle));
+            SpawnAroundPlayer(toSpawn);
+        }
+    }
 
-            // small chance of secondary wave from a different side
-            if (Random.value < multiWaveChance)
-            {
-                float altAngle = currentWaveAngle + Random.Range(120f, 180f);
-                StartCoroutine(SpawnMultiLaneWave(toSpawn / 2, altAngle, secondaryWaveDelay));
-            }
+    void SpawnAroundPlayer(int totalEnemies)
+    {
+        if (totalEnemies <= 0) return;
+
+        int directions = Random.Range(minDirections, maxDirections + 1); // 2–4
+        directions = Mathf.Max(1, directions);
+
+        int enemiesPerDir = Mathf.Max(1, totalEnemies / directions);
+
+        for (int i = 0; i < directions; i++)
+        {
+            float angle = Random.Range(0f, 360f);
+            StartCoroutine(SpawnMultiLaneWave(enemiesPerDir, angle, 0f));
         }
     }
 
@@ -89,22 +95,22 @@ public class EnemySpawner : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        int lanes = Random.Range(2, 4); // between 2 and 3 lanes
+        int lanes = Random.Range(1, 3); // 1–2 lanes per direction
         int enemiesPerLane = Mathf.Max(1, totalEnemies / lanes);
 
         for (int lane = 0; lane < lanes; lane++)
         {
-            // spread each lane slightly so it's not a straight column
-            float laneAngleOffset = (lane - (lanes - 1) / 2f) * 8f;
+            float laneAngleOffset = (lane - (lanes - 1) / 2f) * 6f;
             float laneSideOffset = (lane - (lanes - 1) / 2f) * laneSpacing;
 
             for (int i = 0; i < enemiesPerLane; i++)
             {
                 Vector2 spawnPos = GetSpawnPositionNearScreenEdge(baseAngle + laneAngleOffset, laneSideOffset);
 
-                Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+                GameObject prefab = GetRandomEnemyPrefab();
+                if (prefab != null)
+                    Instantiate(prefab, spawnPos, Quaternion.identity);
 
-                // small delay between spawns so they feel like they’re walking in
                 yield return new WaitForSeconds(spawnDelay);
             }
         }
@@ -114,27 +120,35 @@ public class EnemySpawner : MonoBehaviour
     {
         Vector2 playerPos2D = player.transform.position;
 
-        // grab camera bounds in world space
         float camHeight = 2f * mainCam.orthographicSize;
         float camWidth = camHeight * mainCam.aspect;
 
-        // direction for this wave
         Vector2 dir = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)).normalized;
 
         // spawn just outside the visible area
-        float spawnDistance = Mathf.Max(camWidth, camHeight) * 0.55f + edgeBuffer;
+        float spawnDistance = Mathf.Max(camWidth, camHeight) * 0.35f + edgeBuffer;
 
-        // base spawn position slightly past the camera edge
         Vector2 spawnBase = playerPos2D + dir * spawnDistance;
 
-        // offset lanes sideways so it's a band instead of one line
         Vector2 perpendicular = new Vector2(-dir.y, dir.x);
         spawnBase += perpendicular * laneOffset;
 
-        // add noise so enemies arent in a perfect line
         spawnBase += Random.insideUnitCircle * positionNoise;
 
         return spawnBase;
+    }
+
+    GameObject GetRandomEnemyPrefab()
+    {
+        float r = Random.value;
+
+        if (r < fastChance && fastEnemyPrefab != null)
+            return fastEnemyPrefab;
+
+        if (r < fastChance + tankChance && tankEnemyPrefab != null)
+            return tankEnemyPrefab;
+
+        return basicEnemyPrefab;
     }
 
     int CountActiveEnemies()
@@ -149,7 +163,7 @@ public class EnemySpawner : MonoBehaviour
         Gizmos.color = Color.yellow;
         float camHeight = 2f * mainCam.orthographicSize;
         float camWidth = camHeight * mainCam.aspect;
-        float radius = Mathf.Max(camWidth, camHeight) * 0.55f + edgeBuffer;
+        float radius = Mathf.Max(camWidth, camHeight) * 0.35f + edgeBuffer;
         Gizmos.DrawWireSphere(player.transform.position, radius);
     }
 }

@@ -250534,10 +250534,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18cee5c3203f3d4db6f82d40e2b08c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 4270377517579404509, guid: 70fcad9105982d84aa0dbbff4b958a6b, type: 3}
-  minEnemies: 5
+  basicEnemyPrefab: {fileID: 4270377517579404509, guid: 70fcad9105982d84aa0dbbff4b958a6b, type: 3}
+  fastEnemyPrefab: {fileID: 4270377517579404509, guid: f5001c9cefdc2d44a8b6dd7bb93a2a35, type: 3}
+  tankEnemyPrefab: {fileID: 4270377517579404509, guid: dd550cec2efb5f642b1f3b12f56bd9fb, type: 3}
+  minEnemies: 14
   maxEnemies: 50
-  baseWaveSize: 3
+  baseWaveSize: 10
   spawnDelay: 0.05
   checkInterval: 0.4
   edgeBuffer: 2
@@ -250545,9 +250547,10 @@ MonoBehaviour:
   laneSpacing: 2.5
   rampInterval: 15
   rampMultiplier: 1.15
-  directionChangeInterval: 7
-  multiWaveChance: 0.4
-  secondaryWaveDelay: 2
+  minDirections: 2
+  maxDirections: 4
+  fastChance: 0.2
+  tankChance: 0.1
 --- !u!4 &610726975
 Transform:
   m_ObjectHideFlags: 0
@@ -252220,9 +252223,9 @@ MonoBehaviour:
   lightningSpecial: {fileID: 5762414259164373940, guid: bcac39bf579b9ca4783f30ff9aca4d1b, type: 3}
   comboSpecial: {fileID: 5762414259164373940, guid: 6e3c26e0149e0ca42a61b9581ecad414, type: 3}
   moveSpeed: 4
-  fireRate: 1
-  iceRate: 2.77
-  lightningRate: 6.54
+  fireRate: 0.4
+  iceRate: 1
+  lightningRate: 3.2
   fireRunes: 0
   iceRunes: 0
   lightningRunes: 0
