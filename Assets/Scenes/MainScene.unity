@@ -36638,9 +36638,9 @@ MonoBehaviour:
   fireRate: 0.4
   iceRate: 1
   lightningRate: 3.2
-  fireRunes: 0
-  iceRunes: 0
-  lightningRunes: 0
+  fireRunes: 25
+  iceRunes: 25
+  lightningRunes: 25
   xp: 0
   maxHealth: 10
 --- !u!50 &1858453478

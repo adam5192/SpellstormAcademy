@@ -24,8 +24,9 @@ public class ComboSpecial : MonoBehaviour
     {
         moveDir = dir.normalized;
 
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        // sprite facing right
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 
     void Update()
@@ -51,16 +52,12 @@ public class ComboSpecial : MonoBehaviour
                     if (hitEffect != null)
                         Instantiate(hitEffect, e.transform.position, Quaternion.identity);
 
-                    // only do big shake/pause once, on first hit
                     if (!triggeredBigFeedback)
                     {
                         triggeredBigFeedback = true;
 
                         if (CameraShake.instance != null)
                             CameraShake.instance.Shake(0.18f, 0.4f);
-
-                        if (HitPause.instance != null)
-                            HitPause.instance.DoHitPause(0.015f);
                     }
                 }
             }

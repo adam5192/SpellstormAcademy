@@ -6,14 +6,9 @@ public class LightningSpecial : MonoBehaviour
     [Header("lightning settings")]
     public float radius = 5f;          // damage radius
     public int damage = 25;            // damage dealt to each enemy
-    public float flashDuration = 0.25f;
-    public Color flashColor = new Color(1f, 1f, 0f, 0.35f);
 
     [Header("visuals")]
-    public Sprite circleSprite;
-    public float visualFadeSpeed = 4f;
-
-    private SpriteRenderer sr;
+    public float animDuration = 0.4f;  // how long the lightning anim lasts
 
     void Start()
     {
@@ -29,42 +24,18 @@ public class LightningSpecial : MonoBehaviour
             }
         }
 
-        // medium shake + medium pause
+        // medium shake
         if (CameraShake.instance != null)
             CameraShake.instance.Shake(0.12f, 0.3f);
 
-        // create and animate the visual flash
-        CreateFlashVisual();
-
-        // fade out and destroy after the effect
-        StartCoroutine(FadeAndDestroy());
+        // destroy after the animation is done
+        StartCoroutine(DestroyAfterAnim());
     }
 
-    void CreateFlashVisual()
+    IEnumerator DestroyAfterAnim()
     {
-        GameObject circle = new GameObject("LightningFlash");
-        circle.transform.SetParent(transform);
-        circle.transform.localPosition = Vector3.zero;
-        circle.transform.localScale = Vector3.one * radius * 2f;
-
-        sr = circle.AddComponent<SpriteRenderer>();
-        sr.sprite = circleSprite;
-        sr.color = flashColor;
-        sr.sortingOrder = 10;
-    }
-
-    IEnumerator FadeAndDestroy()
-    {
-        float elapsed = 0f;
-        Color startColor = sr.color;
-
-        while (elapsed < flashDuration)
-        {
-            elapsed += Time.unscaledDeltaTime;
-            float alpha = Mathf.Lerp(startColor.a, 0, elapsed / flashDuration);
-            sr.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
-            yield return null;
-        }
+        // wait for the animation duration (unscaled so pause/slowmo won't break it)
+        yield return new WaitForSecondsRealtime(animDuration);
 
         Destroy(gameObject);
     }

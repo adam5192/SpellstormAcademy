@@ -9,7 +9,7 @@ public class FireSpecial : MonoBehaviour
     public float lifetime = 3f;
     public GameObject hitEffect;
 
-    private Vector2 moveDir; // direction given by player
+    private Vector2 moveDir;
     private float hitRadius;
     private HashSet<Enemy> hitEnemies = new HashSet<Enemy>();
 
@@ -23,17 +23,14 @@ public class FireSpecial : MonoBehaviour
     {
         moveDir = dir.normalized;
 
-        // rotate projectile so it points the correct way
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        // sprite is drawn facing right, so rotate to match dir directly
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 
     void Update()
     {
-        // move in the assigned direction
         transform.Translate(moveDir * speed * Time.deltaTime, Space.World);
-
-        // deal damage while moving
         CheckHits();
     }
 
@@ -54,7 +51,6 @@ public class FireSpecial : MonoBehaviour
                     if (hitEffect != null)
                         Instantiate(hitEffect, e.transform.position, Quaternion.identity);
 
-                    // subtle shake + tiny pause on special hit
                     if (CameraShake.instance != null)
                         CameraShake.instance.Shake(0.08f, 0.2f);
                 }

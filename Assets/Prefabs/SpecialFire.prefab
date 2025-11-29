@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 176074372008248748}
   - component: {fileID: 2986749741254095174}
   - component: {fileID: 6505027630446744864}
+  - component: {fileID: 7613075634219109228}
   m_Layer: 0
   m_Name: SpecialFire
   m_TagString: Projectile
@@ -75,8 +76,8 @@ SpriteRenderer:
   m_SortingLayerID: -1013853317
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.8207547, g: 0.43895093, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: c60e94be37b3af14b866d31159470f3a, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -135,5 +136,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 12
   damage: 20
-  lifetime: 3
+  lifetime: 4
   hitEffect: {fileID: 0}
+--- !u!95 &7613075634219109228
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5762414259164373940}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c79f84d4a31cbca428237309b388b562, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

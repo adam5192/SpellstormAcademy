@@ -5,7 +5,7 @@ public class IceSpecial : MonoBehaviour
 {
     [Header("ice settings")]
     public float speed = 12f;
-    public float freezeTime = 3f; // how long enemies stay frozen
+    public float freezeTime = 3f;
     public float lifetime = 3f;
     public GameObject hitEffect;
 
@@ -23,9 +23,9 @@ public class IceSpecial : MonoBehaviour
     {
         moveDir = dir.normalized;
 
-        // rotate the projectile so it points the correct way
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        // sprite facing right
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 
     void Update()
@@ -51,7 +51,6 @@ public class IceSpecial : MonoBehaviour
                     if (hitEffect != null)
                         Instantiate(hitEffect, e.transform.position, Quaternion.identity);
 
-                    // subtle shake + tiny pause on special hit
                     if (CameraShake.instance != null)
                         CameraShake.instance.Shake(0.08f, 0.2f);
                 }
