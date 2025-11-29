@@ -41,6 +41,10 @@ public class PlayerController : MonoBehaviour
     private bool isDead = false;
     private UIManager ui;
 
+    // upgrades + leveling
+    private UpgradeManager upgradeManager;
+    private PlayerXP playerXP;
+
     void Awake()
     {
         // basic setup
@@ -50,6 +54,10 @@ public class PlayerController : MonoBehaviour
 
         if (ui != null)
             ui.UpdateHealth(currentHealth);
+
+        // grab upgrade + xp helpers on same object
+        upgradeManager = GetComponent<UpgradeManager>();
+        playerXP = GetComponent<PlayerXP>();
     }
 
     void Update()
@@ -85,21 +93,36 @@ public class PlayerController : MonoBehaviour
         if (fireTimer <= 0f)
         {
             Shoot(fireProjectile, shootDir);
-            fireTimer = fireRate;
+
+            float cd = fireRate;
+            if (upgradeManager != null)
+                cd = fireRate / Mathf.Max(0.01f, upgradeManager.fireRateMultiplier); // faster with upgrades
+
+            fireTimer = cd;
         }
 
         // ice
         if (iceTimer <= 0f)
         {
             Shoot(iceProjectile, shootDir);
-            iceTimer = iceRate;
+
+            float cd = iceRate;
+            if (upgradeManager != null)
+                cd = iceRate / Mathf.Max(0.01f, upgradeManager.iceRateMultiplier);
+
+            iceTimer = cd;
         }
 
         // lightning
         if (lightningTimer <= 0f)
         {
             Shoot(lightningProjectile, shootDir);
-            lightningTimer = lightningRate;
+
+            float cd = lightningRate;
+            if (upgradeManager != null)
+                cd = lightningRate / Mathf.Max(0.01f, upgradeManager.lightningRateMultiplier);
+
+            lightningTimer = cd;
         }
     }
 
@@ -213,7 +236,11 @@ public class PlayerController : MonoBehaviour
     // rune pickup
     public void AddRune(string type)
     {
-        xp++;
+        xp++; // local counter if needed
+
+        // add xp to leveling system
+        if (playerXP != null)
+            playerXP.AddXP(1);
 
         switch (type)
         {
@@ -231,6 +258,17 @@ public class PlayerController : MonoBehaviour
         {
             ui.UpdateRuneUI(fireRunes, iceRunes, lightningRunes);
         }
+    }
+
+    // heal from upgrades
+    public void Heal(float amount)
+    {
+        if (isDead) return;
+
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+
+        if (ui != null)
+            ui.UpdateHealth(currentHealth);
     }
 
     // damage + death
