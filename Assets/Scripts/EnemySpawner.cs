@@ -81,6 +81,11 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    public int GetActiveEnemies()
+    {
+        return CountActiveEnemies();
+    }
+
     void SpawnAroundPlayer(int totalEnemies)
     {
         if (totalEnemies <= 0) return;

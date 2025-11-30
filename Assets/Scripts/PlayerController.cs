@@ -42,6 +42,31 @@ public class PlayerController : MonoBehaviour
     private bool isDead = false;
     private UIManager ui;
 
+    [Header("sound effects")]
+    public AudioClip fireShootSfx;
+    public float fireShootVolume = 1f;
+    public AudioClip iceShootSfx;
+    public float iceShootVolume = 1f;
+    public AudioClip lightningShootSfx;
+    public float lightningShootVolume = 1f;
+    public AudioClip fireSpecialSfx;
+    public float fireSpecialVolume = 1f;
+    public AudioClip iceSpecialSfx;
+    public float iceSpecialVolume = 1f;
+    public AudioClip lightningSpecialSfx;
+    public float lightningSpecialVolume = 1f;
+    public AudioClip comboSpecialSfx;
+    public float comboSpecialVolume = 1f;
+
+    // sfx cooldowns to not spam audio
+    private float fireSfxTimer = 0f;
+    private float iceSfxTimer = 0f;
+    private float lightningSfxTimer = 0f;
+
+
+    private AudioSource audioSrc;
+
+
     // upgrades + leveling
     private UpgradeManager upgradeManager;
     private PlayerXP playerXP;
@@ -56,6 +81,7 @@ public class PlayerController : MonoBehaviour
         xpSystem = GetComponent<PlayerXP>(); // grab xp script
         upgradeMenu = FindObjectOfType<UpgradeMenu>();
         upgradeManager = GetComponent<UpgradeManager>();
+        audioSrc = GetComponent<AudioSource>();
 
         if (ui != null)
             ui.UpdateHealth(currentHealth);
@@ -64,6 +90,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        fireSfxTimer -= Time.deltaTime;
+        iceSfxTimer -= Time.deltaTime;
+        lightningSfxTimer -= Time.deltaTime;
+
         HandleMovementInput();
         HandleAutoFire();
         HandleSpecials();
@@ -135,11 +165,34 @@ public class PlayerController : MonoBehaviour
 
         GameObject proj = Instantiate(prefab, transform.position, Quaternion.identity);
 
-        // let projectile base handle movement + rotation
         ProjectileBase pb = proj.GetComponent<ProjectileBase>();
         if (pb != null)
             pb.SetDirection(dir);
+
+        // play sfx but don't spam every single shot
+        if (audioSrc != null)
+        {
+            if (prefab == fireProjectile && fireShootSfx != null && fireSfxTimer <= 0f)
+            {
+                audioSrc.PlayOneShot(fireShootSfx, fireShootVolume);
+                fireSfxTimer = 0.15f; // min gap between fire sounds 
+            }
+
+            if (prefab == iceProjectile && iceShootSfx != null && iceSfxTimer <= 0f)
+            {
+                audioSrc.PlayOneShot(iceShootSfx, iceShootVolume);
+                iceSfxTimer = 0.2f;
+            }
+
+            if (prefab == lightningProjectile && lightningShootSfx != null && lightningSfxTimer <= 0f)
+            {
+                audioSrc.PlayOneShot(lightningShootSfx, lightningShootVolume);
+                lightningSfxTimer = 0.2f;
+            }
+        }
     }
+
+
 
     // get direction toward nearest enemy, or up if none
     Vector2 GetAimDirection()
@@ -192,6 +245,7 @@ public class PlayerController : MonoBehaviour
             GameObject special = Instantiate(fireSpecial, transform.position, Quaternion.identity);
             special.GetComponent<FireSpecial>()?.SetDirection(mouseDir);
             fireRunes -= 5;
+            audioSrc.PlayOneShot(fireSpecialSfx, fireSpecialVolume);
             UpdateRuneUI();
         }
 
@@ -201,6 +255,7 @@ public class PlayerController : MonoBehaviour
             GameObject special = Instantiate(iceSpecial, transform.position, Quaternion.identity);
             special.GetComponent<IceSpecial>()?.SetDirection(mouseDir);
             iceRunes -= 5;
+            audioSrc.PlayOneShot(iceSpecialSfx, iceSpecialVolume);
             UpdateRuneUI();
         }
 
@@ -209,6 +264,7 @@ public class PlayerController : MonoBehaviour
         {
             Instantiate(lightningSpecial, transform.position, Quaternion.identity);
             lightningRunes -= 5;
+            audioSrc.PlayOneShot(lightningSpecialSfx, lightningSpecialVolume);
             UpdateRuneUI();
         }
 
@@ -221,6 +277,7 @@ public class PlayerController : MonoBehaviour
             fireRunes -= 5;
             iceRunes -= 5;
             lightningRunes -= 5;
+            audioSrc.PlayOneShot(comboSpecialSfx, comboSpecialVolume);
             UpdateRuneUI();
         }
     }

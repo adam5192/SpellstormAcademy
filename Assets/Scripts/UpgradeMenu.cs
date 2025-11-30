@@ -26,10 +26,22 @@ public class UpgradeMenu : MonoBehaviour
     public List<UpgradeData> allUpgrades = new List<UpgradeData>(); // all possible upgrades
 
     [Header("refs")]
-    public UpgradeManager upgradeManager; 
+    public UpgradeManager upgradeManager;
+
+    [Header("sound effects")]
+    private AudioSource audioSrc;
+    public AudioClip levelUp;
+    public float levelUpVolume = 1f;
+    public AudioClip upgradeStat;
+    public float upgradeStatVolume = 1f;
 
     bool isOpen = false;
     float previousTimeScale = 1f;
+
+    void Awake()
+    {
+        audioSrc = GetComponent<AudioSource>();
+    }
 
     void Start()
     {
@@ -71,6 +83,7 @@ public class UpgradeMenu : MonoBehaviour
         // pause game
         previousTimeScale = Time.timeScale;
         Time.timeScale = 0f;
+        audioSrc.PlayOneShot(levelUp, levelUpVolume);
 
         // pick some random upgrades
         List<UpgradeData> options = GetRandomUpgrades(3);
@@ -135,6 +148,7 @@ public class UpgradeMenu : MonoBehaviour
 
         if (upgradeManager != null)
         {
+            audioSrc.PlayOneShot(upgradeStat, upgradeStatVolume);
             upgradeManager.ApplyUpgrade(buttonUI.assignedUpgrade);
         }
         else
