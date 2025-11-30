@@ -1,61 +1,75 @@
 using UnityEngine;
 
-// handles xp + level ups
 public class PlayerXP : MonoBehaviour
 {
     [Header("xp / level")]
-    public int currentLevel = 1;      // starting level
-    public int currentXP = 0;         // current xp towards next level
-    public int xpToNextLevel = 0;     // needed for next level
+    public int currentLevel = 1;
+    public int currentXP = 0;
+    public int xpToNextLevel = 0;
 
-    public int baseXP = 5;            // base xp at level 1
-    public int xpPerLevel = 3;        // extra xp per level (vs style)
+    [Header("xp curve")]
+    public int baseXP = 5;      // xp needed for level 1 -> 2
+    public int xpPerLevel = 3;  // extra xp needed each level
 
-    [Header("ui")]
-    public UpgradeMenu upgradeMenu;  
+    [Header("upgrade menu")]
+    public UpgradeMenu upgradeMenu; // hooked from inspector
+
+    private UIManager ui;
 
     void Start()
     {
-        // setup first xp target
+        // grab ui once
+        ui = FindObjectOfType<UIManager>();
+
+        // set first level requirement
         xpToNextLevel = ComputeXPForLevel(currentLevel);
+
+        // sync ui at start
+        UpdateXPUI();
     }
 
-    // call this when player picks up a rune
+    // external call when player gets xp
     public void AddXP(int amount)
     {
         if (amount <= 0) return;
 
         currentXP += amount;
 
-        // in case gain more than one level at once
+        // handle multiple level ups if you gain a bunch at once
+        bool leveledUp = false;
         while (currentXP >= xpToNextLevel)
         {
             currentXP -= xpToNextLevel;
             LevelUp();
+            leveledUp = true;
         }
+
+        if (!leveledUp)
+            UpdateXPUI();
     }
 
-    // simple xp curve: xp(n) = base + n * step
     int ComputeXPForLevel(int level)
     {
-        return baseXP + (level * xpPerLevel);
+        // simple linear growth like vampire survivors (ish)
+        return baseXP + level * xpPerLevel;
     }
 
-    // handle level up and open menu
     void LevelUp()
     {
         currentLevel++;
         xpToNextLevel = ComputeXPForLevel(currentLevel);
 
-        Debug.Log("leveled up to " + currentLevel);
-
+        // open level up menu
         if (upgradeMenu != null)
-        {
             upgradeMenu.OpenLevelUpMenu();
-        }
-        else
-        {
-            Debug.LogWarning("player xp: no upgrade menu hooked up");
-        }
+
+        // update ui with new level + new bar max
+        UpdateXPUI();
+    }
+
+    void UpdateXPUI()
+    {
+        if (ui != null)
+            ui.UpdateXPBar(currentLevel, currentXP, xpToNextLevel);
     }
 }

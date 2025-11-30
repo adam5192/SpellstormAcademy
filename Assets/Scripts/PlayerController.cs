@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     public int iceRunes;
     public int lightningRunes;
     public int xp;
+    private PlayerXP xpSystem;
 
     [Header("player health")]
     public float maxHealth = 10f;
@@ -51,14 +52,12 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         currentHealth = maxHealth;
         ui = FindObjectOfType<UIManager>();
+        xpSystem = GetComponent<PlayerXP>(); // grab xp script
 
         if (ui != null)
             ui.UpdateHealth(currentHealth);
-
-        // grab upgrade + xp helpers on same object
-        upgradeManager = GetComponent<UpgradeManager>();
-        playerXP = GetComponent<PlayerXP>();
     }
+
 
     void Update()
     {
@@ -236,11 +235,9 @@ public class PlayerController : MonoBehaviour
     // rune pickup
     public void AddRune(string type)
     {
-        xp++; // local counter if needed
-
-        // add xp to leveling system
-        if (playerXP != null)
-            playerXP.AddXP(1);
+        // each rune = 1 xp
+        if (xpSystem != null)
+            xpSystem.AddXP(1);
 
         switch (type)
         {
@@ -251,6 +248,7 @@ public class PlayerController : MonoBehaviour
 
         UpdateRuneUI();
     }
+
 
     void UpdateRuneUI()
     {

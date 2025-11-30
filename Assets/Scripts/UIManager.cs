@@ -11,6 +11,10 @@ public class UIManager : MonoBehaviour
     public Slider healthBar;
     public Image damageFlash;         // red overlay image
 
+    [Header("xp ui")]
+    public Slider xpBar;              // shows progress to next level
+    public TextMeshProUGUI levelText; // shows current level
+
     private float elapsedTime = 0f;
     private float smoothSpeed = 10f;
     private float targetHealth;
@@ -63,12 +67,12 @@ public class UIManager : MonoBehaviour
         lightningRuneText.color = (lightningCount >= 5) ? readyColor : normalColor;
     }
 
-
     public void UpdateHealth(float newValue)
     {
         targetHealth = newValue;
         healthBar.value = newValue;
     }
+
     public void TriggerDamageFlash()
     {
         if (damageFlash == null) return;
@@ -77,6 +81,19 @@ public class UIManager : MonoBehaviour
         Color c = damageFlash.color;
         c.a = flashAlpha;
         damageFlash.color = c;
+    }
+
+    // called by the xp system whenever xp / level changes
+    public void UpdateXPBar(int level, int currentXP, int xpToNext)
+    {
+        if (xpBar != null)
+        {
+            xpBar.maxValue = xpToNext;
+            xpBar.value = currentXP;
+        }
+
+        if (levelText != null)
+            levelText.text = $"lv {level}";
     }
 
     public void ShowGameOverPanel()
@@ -92,6 +109,4 @@ public class UIManager : MonoBehaviour
 
         gameOverPanel.SetActive(true);
     }
-
-
 }
