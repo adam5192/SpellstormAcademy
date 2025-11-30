@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
     // upgrades + leveling
     private UpgradeManager upgradeManager;
     private PlayerXP playerXP;
+    private UpgradeMenu upgradeMenu;
 
     void Awake()
     {
@@ -53,6 +54,8 @@ public class PlayerController : MonoBehaviour
         currentHealth = maxHealth;
         ui = FindObjectOfType<UIManager>();
         xpSystem = GetComponent<PlayerXP>(); // grab xp script
+        upgradeMenu = FindObjectOfType<UpgradeMenu>();
+        upgradeManager = GetComponent<UpgradeManager>();
 
         if (ui != null)
             ui.UpdateHealth(currentHealth);
@@ -178,6 +181,9 @@ public class PlayerController : MonoBehaviour
     // specials now aim at mouse position
     void HandleSpecials()
     {
+        if (upgradeMenu != null && upgradeMenu.IsOpen())
+            return;
+
         Vector2 mouseDir = GetMouseDirection();
 
         // left click = fire special

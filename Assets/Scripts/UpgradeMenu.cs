@@ -49,6 +49,13 @@ public class UpgradeMenu : MonoBehaviour
         }
     }
 
+    // lets other scripts check if menu is open
+    public bool IsOpen()
+    {
+        return isOpen;
+    }
+
+
     // called from player xp when we level up
     public void OpenLevelUpMenu()
     {
