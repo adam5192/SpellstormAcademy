@@ -9,6 +9,9 @@ public class CameraShake : MonoBehaviour
     public float defaultDuration = 0.1f;
     public float defaultMagnitude = 0.2f;
 
+    // NEW: let GameManager turn shaking off
+    [HideInInspector] public bool allowShake = true;
+
     private Transform camTransform;
     private Vector3 originalPos;
     private Coroutine shakeRoutine;
@@ -22,6 +25,8 @@ public class CameraShake : MonoBehaviour
 
     public void Shake(float duration, float magnitude)
     {
+        if (!allowShake) return;
+
         if (shakeRoutine != null)
             StopCoroutine(shakeRoutine);
 

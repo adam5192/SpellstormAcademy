@@ -57,6 +57,14 @@ public class PlayerController : MonoBehaviour
     public float lightningSpecialVolume = 1f;
     public AudioClip comboSpecialSfx;
     public float comboSpecialVolume = 1f;
+    public AudioClip ouchSfx;
+
+    [Header("special ui")]
+    public SpecialUIIcon fireUI;
+    public SpecialUIIcon iceUI;
+    public SpecialUIIcon lightningUI;
+    public SpecialUIIcon comboUI;
+
 
     // sfx cooldowns to not spam audio
     private float fireSfxTimer = 0f;
@@ -71,6 +79,14 @@ public class PlayerController : MonoBehaviour
     private UpgradeManager upgradeManager;
     private PlayerXP playerXP;
     private UpgradeMenu upgradeMenu;
+
+    void Start()
+    {
+        fireTimer = fireRate;
+        iceTimer = iceRate;
+        lightningTimer = lightningRate;
+    }
+
 
     void Awake()
     {
@@ -97,6 +113,7 @@ public class PlayerController : MonoBehaviour
         HandleMovementInput();
         HandleAutoFire();
         HandleSpecials();
+        UpdateSpecialUI();
     }
 
     void FixedUpdate()
@@ -247,6 +264,7 @@ public class PlayerController : MonoBehaviour
             fireRunes -= 5;
             audioSrc.PlayOneShot(fireSpecialSfx, fireSpecialVolume);
             UpdateRuneUI();
+            UpdateSpecialUI();
         }
 
         // right click = ice special
@@ -257,6 +275,7 @@ public class PlayerController : MonoBehaviour
             iceRunes -= 5;
             audioSrc.PlayOneShot(iceSpecialSfx, iceSpecialVolume);
             UpdateRuneUI();
+            UpdateSpecialUI();
         }
 
         // middle click = lightning special (aoe)
@@ -266,6 +285,7 @@ public class PlayerController : MonoBehaviour
             lightningRunes -= 5;
             audioSrc.PlayOneShot(lightningSpecialSfx, lightningSpecialVolume);
             UpdateRuneUI();
+            UpdateSpecialUI();
         }
 
         // E = combo (all 3 full)
@@ -279,6 +299,7 @@ public class PlayerController : MonoBehaviour
             lightningRunes -= 5;
             audioSrc.PlayOneShot(comboSpecialSfx, comboSpecialVolume);
             UpdateRuneUI();
+            UpdateSpecialUI();
         }
     }
 
@@ -310,6 +331,7 @@ public class PlayerController : MonoBehaviour
         }
 
         UpdateRuneUI();
+        UpdateSpecialUI();
     }
 
 
@@ -320,6 +342,32 @@ public class PlayerController : MonoBehaviour
             ui.UpdateRuneUI(fireRunes, iceRunes, lightningRunes);
         }
     }
+
+    void UpdateSpecialUI()
+    {
+        // fire special
+        int fireStacks = fireRunes / 5;
+        float fireProgress = Mathf.Clamp01(fireRunes / 5f);
+        fireUI.UpdateUI(fireStacks > 0, fireProgress, fireStacks);
+
+        // ice special
+        int iceStacks = iceRunes / 5;
+        float iceProgress = Mathf.Clamp01(iceRunes / 5f);
+        iceUI.UpdateUI(iceStacks > 0, iceProgress, iceStacks);
+
+        // lightning
+        int lightningStacks = lightningRunes / 5;
+        float lightningProgress = Mathf.Clamp01(lightningRunes / 5f);
+        lightningUI.UpdateUI(lightningStacks > 0, lightningProgress, lightningStacks);
+
+        // combo: uses MIN of all 3
+        int comboStacks = Mathf.Min(fireRunes / 5, iceRunes / 5, lightningRunes / 5);
+        float comboProgress = Mathf.Clamp01(
+            Mathf.Min(fireRunes, iceRunes, lightningRunes) / 5f
+        );
+        comboUI.UpdateUI(comboStacks > 0, comboProgress, comboStacks);
+    }
+
 
     // heal from upgrades
     public void Heal(float amount)
@@ -337,6 +385,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isDead) return;
 
+        audioSrc.PlayOneShot(ouchSfx, 1);
         currentHealth -= dmg;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
@@ -359,12 +408,17 @@ public class PlayerController : MonoBehaviour
 
     void Die()
     {
+        if (isDead) return;
         isDead = true;
-        if (ui != null)
-            ui.ShowGameOverPanel();
+
+        if (GameManager.instance != null)
+            GameManager.instance.GameOver();
 
         Debug.Log("player died");
         enabled = false;
     }
+
+
+
 
 }

@@ -18,15 +18,12 @@ public class PlayerXP : MonoBehaviour
 
     void Start()
     {
-        // grab ui once
-        ui = FindObjectOfType<UIManager>();
+        ui = UIManager.instance; 
 
-        // set first level requirement
         xpToNextLevel = ComputeXPForLevel(currentLevel);
-
-        // sync ui at start
         UpdateXPUI();
     }
+
 
     // external call when player gets xp
     public void AddXP(int amount)

@@ -6,6 +6,7 @@ public class HitPause : MonoBehaviour
     public static HitPause instance;
 
     private bool isPausing = false;
+    private Coroutine pauseRoutine;
 
     void Awake()
     {
@@ -17,7 +18,11 @@ public class HitPause : MonoBehaviour
         if (isPausing) return;
         if (duration <= 0f) return;
 
-        StartCoroutine(HitPauseRoutine(duration));
+        // dont start new hit pauses after game over
+        if (GameManager.instance != null && GameManager.instance.IsGameOver)
+            return;
+
+        pauseRoutine = StartCoroutine(HitPauseRoutine(duration));
     }
 
     IEnumerator HitPauseRoutine(float duration)
@@ -29,7 +34,23 @@ public class HitPause : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(duration);
 
-        Time.timeScale = originalTimeScale;
+        // if the game ended while paused, DONT restore timeScale
+        if (GameManager.instance == null || !GameManager.instance.IsGameOver)
+        {
+            Time.timeScale = originalTimeScale;
+        }
+
+        isPausing = false;
+        pauseRoutine = null;
+    }
+
+    // kill any active pause
+    public void CancelOnGameOver()
+    {
+        if (pauseRoutine != null)
+            StopCoroutine(pauseRoutine);
+
+        pauseRoutine = null;
         isPausing = false;
     }
 }

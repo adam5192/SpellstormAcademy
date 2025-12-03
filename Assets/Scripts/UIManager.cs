@@ -16,18 +16,25 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI levelText; // shows current level
 
     private float elapsedTime = 0f;
-    private float smoothSpeed = 10f;
-    private float targetHealth;
-    private float flashAlpha = 0f;    // current flash opacity
-    private float flashFadeSpeed = 2f; // how fast it fades out
+    private float flashAlpha = 0f;
+    private float flashFadeSpeed = 2f;
 
     public GameObject gameOverPanel;
     public TextMeshProUGUI survivalTimeText;
 
+    public static UIManager instance;
+
     void Start()
     {
-        if (healthBar != null)
-            targetHealth = healthBar.value;
+    }
+    void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
     }
 
     void Update()
@@ -36,11 +43,7 @@ public class UIManager : MonoBehaviour
         elapsedTime += Time.deltaTime;
         int minutes = Mathf.FloorToInt(elapsedTime / 60f);
         int seconds = Mathf.FloorToInt(elapsedTime % 60f);
-        timerText.text = $"Time: {minutes:00}:{seconds:00}";
-
-        // smooth hp bar
-        if (healthBar != null)
-            healthBar.value = Mathf.Lerp(healthBar.value, targetHealth, Time.deltaTime * smoothSpeed);
+        timerText.text = $"{minutes:00}:{seconds:00}";
 
         // fade flash out over time
         if (damageFlash != null && flashAlpha > 0f)
@@ -55,7 +58,7 @@ public class UIManager : MonoBehaviour
     public void UpdateRuneUI(int fireCount, int iceCount, int lightningCount)
     {
         Color normalColor = Color.white;
-        Color readyColor = Color.green; // when ready, text becomes green
+        Color readyColor = Color.green;
 
         fireRuneText.text = $"Fire Runes: {fireCount}/5";
         fireRuneText.color = (fireCount >= 5) ? readyColor : normalColor;
@@ -69,21 +72,20 @@ public class UIManager : MonoBehaviour
 
     public void UpdateHealth(float newValue)
     {
-        targetHealth = newValue;
-        healthBar.value = newValue;
+        if (healthBar != null)
+            healthBar.value = newValue;  // no smoothing, just snap to real hp
     }
 
     public void TriggerDamageFlash()
     {
         if (damageFlash == null) return;
 
-        flashAlpha = 0.5f; // how bright the flash is
+        flashAlpha = 0.5f;
         Color c = damageFlash.color;
         c.a = flashAlpha;
         damageFlash.color = c;
     }
 
-    // called by the xp system whenever xp / level changes
     public void UpdateXPBar(int level, int currentXP, int xpToNext)
     {
         if (xpBar != null)
@@ -100,7 +102,6 @@ public class UIManager : MonoBehaviour
     {
         if (gameOverPanel == null) return;
 
-        // calculate survival time before showing
         int minutes = Mathf.FloorToInt(elapsedTime / 60f);
         int seconds = Mathf.FloorToInt(elapsedTime % 60f);
 
