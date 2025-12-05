@@ -9,6 +9,12 @@ public class UpgradeManager : MonoBehaviour
     public float iceRateMultiplier = 1f;
     public float lightningRateMultiplier = 1f;
 
+    [Header("combat multipliers")]
+    // 1 = default, 1.15 = +15%
+    public float moveSpeedMultiplier = 1f;
+    public float damageMultiplier = 1f;
+    public float projectileSpeedMultiplier = 1f;
+
     [Header("refs")]
     public PlayerController player; // auto filled if left empty
 
@@ -44,6 +50,18 @@ public class UpgradeManager : MonoBehaviour
 
             case UpgradeType.Heal:
                 ApplyHealUpgrade(upgrade.value);
+                break;
+
+            case UpgradeType.MoveSpeed:
+                ApplyMoveSpeedUpgrade(upgrade.value);
+                break;
+
+            case UpgradeType.Damage:
+                ApplyDamageUpgrade(upgrade.value);
+                break;
+
+            case UpgradeType.ProjectileSpeed:
+                ApplyProjectileSpeedUpgrade(upgrade.value);
                 break;
 
             default:
@@ -82,5 +100,20 @@ public class UpgradeManager : MonoBehaviour
         }
 
         player.Heal(hearts);
+    }
+
+    void ApplyMoveSpeedUpgrade(float value)
+    {
+        moveSpeedMultiplier *= (1f + value);
+    }
+
+    void ApplyDamageUpgrade(float value)
+    {
+        damageMultiplier *= (1f + value);
+    }
+
+    void ApplyProjectileSpeedUpgrade(float value)
+    {
+        projectileSpeedMultiplier *= (1f + value);
     }
 }

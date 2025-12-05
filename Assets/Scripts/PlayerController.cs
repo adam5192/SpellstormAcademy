@@ -119,7 +119,11 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         // classic top-down movement
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+        float speed = moveSpeed;
+        if (upgradeManager != null)
+            speed *= upgradeManager.moveSpeedMultiplier;
+
+        rb.MovePosition(rb.position + moveInput * speed * Time.fixedDeltaTime);
     }
 
     void HandleMovementInput()
@@ -184,7 +188,18 @@ public class PlayerController : MonoBehaviour
 
         ProjectileBase pb = proj.GetComponent<ProjectileBase>();
         if (pb != null)
+        {
             pb.SetDirection(dir);
+
+            if (upgradeManager != null)
+            {
+                // scale projectile speed
+                pb.speed *= upgradeManager.projectileSpeedMultiplier;
+
+                // scale projectile damage 
+                pb.damage = Mathf.RoundToInt(pb.damage * upgradeManager.damageMultiplier);
+            }
+        }
 
         // play sfx but don't spam every single shot
         if (audioSrc != null)

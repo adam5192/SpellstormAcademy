@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc132f8eada3f3a47865200a55472b76, type: 3}
   m_Name: Fire Rate
   m_EditorClassIdentifier: 
-  upgradeName: Fire Rate Up
-  description: Shoot fire faster
+  upgradeName: Fire Rate UP
+  description: Fireball is cast 20% more often
   type: 0
-  value: 0.15
+  value: 0.2
   rarity: 0
   manualWeightOverride: 0

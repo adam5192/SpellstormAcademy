@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc132f8eada3f3a47865200a55472b76, type: 3}
-  m_Name: Lightning Rate
+  m_Name: ProjectileSpeed
   m_EditorClassIdentifier: 
-  upgradeName: Lightning Rate UP
-  description: Lightning bolt is cast 20% more often
-  type: 2
+  upgradeName: Projectile Speed UP
+  description: Your projectiles move 20% faster
+  type: 6
   value: 0.2
   rarity: 0
   manualWeightOverride: 0

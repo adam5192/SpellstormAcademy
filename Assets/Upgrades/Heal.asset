@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Heal
   m_EditorClassIdentifier: 
   upgradeName: Heal
-  description: Heal yourself
+  description: Heal yourself to max HP
   type: 3
   value: 10
   rarity: 1

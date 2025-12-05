@@ -35248,6 +35248,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2e1d0b9031101f04ca3bc8acf7a2494c, type: 2}
   - {fileID: 11400000, guid: 791c8737cc474e042972dbe2ada05507, type: 2}
   - {fileID: 11400000, guid: bc7f4ff5a3e67064ea9d23b8ed156d83, type: 2}
+  - {fileID: 11400000, guid: d4de14e80d69de24884face6a8325865, type: 2}
+  - {fileID: 11400000, guid: 21d286e31081c4f4a892f3c7d6f5bf11, type: 2}
+  - {fileID: 11400000, guid: 8a45077019af42345bcf4397d91027ee, type: 2}
   upgradeManager: {fileID: 1858453483}
   levelUp: {fileID: 8300000, guid: 93071fd23094fb540b3140b3d618b183, type: 3}
   levelUpVolume: 1
@@ -35592,12 +35595,17 @@ MonoBehaviour:
   edgeBuffer: 2
   positionNoise: 1.5
   laneSpacing: 2.5
+  screenRadiusFactor: 0.6
+  minSafeDistanceFromPlayer: 7
   minX: -24.6
   maxX: 24.6
   minY: -14.6
   maxY: 14.6
-  rampInterval: 15
-  rampMultiplier: 1.15
+  warmupDuration: 45
+  earlyRampInterval: 10
+  lateRampInterval: 6
+  earlyRampMultiplier: 1.1
+  lateRampMultiplier: 1.2
   minDirections: 2
   maxDirections: 4
   fastChance: 0.2
@@ -39762,6 +39770,9 @@ MonoBehaviour:
   fireRateMultiplier: 1
   iceRateMultiplier: 1
   lightningRateMultiplier: 1
+  moveSpeedMultiplier: 1
+  damageMultiplier: 1
+  projectileSpeedMultiplier: 1
   player: {fileID: 1858453476}
 --- !u!114 &1858453484
 MonoBehaviour:

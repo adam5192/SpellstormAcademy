@@ -5,5 +5,8 @@ public enum UpgradeType
     FireRate,
     IceRate,
     LightningRate,
-    Heal
+    Heal,
+    MoveSpeed,
+    Damage,
+    ProjectileSpeed
 }
