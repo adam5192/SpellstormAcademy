@@ -263,7 +263,6 @@ public class PlayerController : MonoBehaviour
             special.GetComponent<FireSpecial>()?.SetDirection(mouseDir);
             fireRunes -= 5;
             audioSrc.PlayOneShot(fireSpecialSfx, fireSpecialVolume);
-            UpdateRuneUI();
             UpdateSpecialUI();
         }
 
@@ -274,7 +273,6 @@ public class PlayerController : MonoBehaviour
             special.GetComponent<IceSpecial>()?.SetDirection(mouseDir);
             iceRunes -= 5;
             audioSrc.PlayOneShot(iceSpecialSfx, iceSpecialVolume);
-            UpdateRuneUI();
             UpdateSpecialUI();
         }
 
@@ -284,7 +282,6 @@ public class PlayerController : MonoBehaviour
             Instantiate(lightningSpecial, transform.position, Quaternion.identity);
             lightningRunes -= 5;
             audioSrc.PlayOneShot(lightningSpecialSfx, lightningSpecialVolume);
-            UpdateRuneUI();
             UpdateSpecialUI();
         }
 
@@ -298,7 +295,6 @@ public class PlayerController : MonoBehaviour
             iceRunes -= 5;
             lightningRunes -= 5;
             audioSrc.PlayOneShot(comboSpecialSfx, comboSpecialVolume);
-            UpdateRuneUI();
             UpdateSpecialUI();
         }
     }
@@ -330,17 +326,7 @@ public class PlayerController : MonoBehaviour
             case "Lightning": lightningRunes++; break;
         }
 
-        UpdateRuneUI();
         UpdateSpecialUI();
-    }
-
-
-    void UpdateRuneUI()
-    {
-        if (ui != null)
-        {
-            ui.UpdateRuneUI(fireRunes, iceRunes, lightningRunes);
-        }
     }
 
     void UpdateSpecialUI()

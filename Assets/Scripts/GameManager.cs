@@ -76,4 +76,14 @@ public class GameManager : MonoBehaviour
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void ReturnToMainMenu()
+    {
+        // unfreeze everything before switching scenes
+        AudioListener.pause = false;
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene("MainMenu");
+    }
+
 }

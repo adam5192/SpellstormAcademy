@@ -55,21 +55,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateRuneUI(int fireCount, int iceCount, int lightningCount)
-    {
-        Color normalColor = Color.white;
-        Color readyColor = Color.green;
-
-        fireRuneText.text = $"Fire Runes: {fireCount}/5";
-        fireRuneText.color = (fireCount >= 5) ? readyColor : normalColor;
-
-        iceRuneText.text = $"Ice Runes: {iceCount}/5";
-        iceRuneText.color = (iceCount >= 5) ? readyColor : normalColor;
-
-        lightningRuneText.text = $"Lightning Runes: {lightningCount}/5";
-        lightningRuneText.color = (lightningCount >= 5) ? readyColor : normalColor;
-    }
-
     public void UpdateHealth(float newValue)
     {
         if (healthBar != null)
