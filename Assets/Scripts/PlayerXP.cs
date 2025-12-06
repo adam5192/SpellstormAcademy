@@ -47,7 +47,7 @@ public class PlayerXP : MonoBehaviour
 
     int ComputeXPForLevel(int level)
     {
-        // simple linear growth like vampire survivors (ish)
+        // simple linear growth 
         return baseXP + level * xpPerLevel;
     }
 

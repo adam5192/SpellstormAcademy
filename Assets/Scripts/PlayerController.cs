@@ -292,7 +292,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // middle click = lightning special (aoe)
-        if (Input.GetMouseButtonDown(2) && lightningRunes >= 5)
+        if ((Input.GetMouseButtonDown(2) || Input.GetKeyDown(KeyCode.Q)) && lightningRunes >= 5)
         {
             Instantiate(lightningSpecial, transform.position, Quaternion.identity);
             lightningRunes -= 5;

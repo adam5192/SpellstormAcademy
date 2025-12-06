@@ -81,9 +81,9 @@ public class Enemy : MonoBehaviour
         if (controller != null)
             controller.enabled = false;
 
-            // stop animation
-    if (anim != null)
-        anim.speed = 0f;
+        // stop animation
+        if (anim != null)
+            anim.speed = 0f;
     }
 
     void Unfreeze()
@@ -106,7 +106,6 @@ public class Enemy : MonoBehaviour
         isFlashing = true;
         sr.color = flashColor;
 
-        // optional: small scale pop for extra feedback
         transform.localScale *= 1.1f;
 
         yield return new WaitForSeconds(duration);

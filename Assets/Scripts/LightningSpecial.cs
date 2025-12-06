@@ -34,7 +34,7 @@ public class LightningSpecial : MonoBehaviour
 
     IEnumerator DestroyAfterAnim()
     {
-        // wait for the animation duration (unscaled so pause/slowmo won't break it)
+        // wait for the animation duration
         yield return new WaitForSecondsRealtime(animDuration);
 
         Destroy(gameObject);
