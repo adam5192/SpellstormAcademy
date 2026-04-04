@@ -130,6 +130,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 1.4
   runePrefab: {fileID: 5579034602638980689, guid: b691146c8c9100244aaa956a8599c913, type: 3}
+  attackSfx: {fileID: 0}
+  attackVolume: 1
 --- !u!114 &4821387274649022278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,6 +148,8 @@ MonoBehaviour:
   fireRunePrefab: {fileID: 5579034602638980689, guid: b691146c8c9100244aaa956a8599c913, type: 3}
   iceRunePrefab: {fileID: 5579034602638980689, guid: e9c450cbf4f8d824ea8c5266bbcc0d19, type: 3}
   lightningRunePrefab: {fileID: 5579034602638980689, guid: 81070ba0f89956e4194cffb795af16d6, type: 3}
+  deathSfx: {fileID: 8300000, guid: c2fb528809c699e4b9013109dc2fe501, type: 3}
+  deathVolume: 2
 --- !u!95 &-2781178520655023544
 Animator:
   serializedVersion: 5

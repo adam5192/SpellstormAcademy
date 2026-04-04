@@ -135,6 +135,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runeType: Fire
+  pickupSfx: {fileID: 8300000, guid: 1cbf2e5aeb945b44ca3161429f664aae, type: 3}
+  pickupVolume: 2
 --- !u!95 &-5084728656789821146
 Animator:
   serializedVersion: 5

@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
     public float gameOverVolume = 1f;
     private AudioSource sfxSource;
 
+    public AudioClip deathVoice;
+    public float deathVoiceVolume = 1f;
+
 
     void Awake()
     {
@@ -42,9 +45,17 @@ public class GameManager : MonoBehaviour
         if (isGameOver) return;
         isGameOver = true;
 
-        // play game over sound before pausing global audio
-        if (gameOverSfx != null && sfxSource != null)
-            sfxSource.PlayOneShot(gameOverSfx, gameOverVolume);
+        if (sfxSource != null)
+        {
+            if (gameOverSfx != null)
+                sfxSource.PlayOneShot(gameOverSfx, gameOverVolume);
+
+            if (deathVoice != null)
+                sfxSource.PlayOneShot(deathVoice, deathVoiceVolume);
+        }
+
+        if (MusicManager.instance != null && deathVoice != null)
+            MusicManager.instance.DuckForSeconds(0.2f, deathVoice.length);
 
         // freeze the world
         Time.timeScale = 0f;

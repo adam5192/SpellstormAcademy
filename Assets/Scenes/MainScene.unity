@@ -37765,7 +37765,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameOverSfx: {fileID: 8300000, guid: 2b32d18c7c1425d46b2c95121f159288, type: 3}
-  gameOverVolume: 1
+  gameOverVolume: 0.5
+  deathVoice: {fileID: 8300000, guid: ff3df921ab450b543b5368c2457c9173, type: 3}
+  deathVoiceVolume: 2
 --- !u!4 &978568279
 Transform:
   m_ObjectHideFlags: 0
@@ -39311,7 +39313,7 @@ MonoBehaviour:
   enemySpawner: {fileID: 610726974}
   calmMusic: {fileID: 8300000, guid: 25b130582dc4519429213f3a97ed9b93, type: 3}
   combatMusic: {fileID: 8300000, guid: 0186b4919cf90db449fe6dc99014c7ee, type: 3}
-  baseVolume: 0.3
+  baseVolume: 0.45
   fadeDuration: 1
   combatEnemyThreshold: 12
   calmEnemyThreshold: 6
@@ -40860,13 +40862,15 @@ MonoBehaviour:
   ouchSfx: {fileID: 8300000, guid: 3516f0b2ecf52fc4f9d65e9c80b399dc, type: 3}
   moveLoopSfx: {fileID: 8300000, guid: e4079f653ebb00a4eacf4b844926b5c6, type: 3}
   empoweredMoveLoopSfx: {fileID: 8300000, guid: 59a84139ac98bcc49861b79248b693ba, type: 3}
-  moveLoopVolume: 0.6
-  minPitch: 0.94
-  maxPitch: 1.06
+  moveLoopVolume: 0.7
+  minPitch: 0.6
+  maxPitch: 1.6
   fireUI: {fileID: 1541224199}
   iceUI: {fileID: 274991887}
   lightningUI: {fileID: 1532380357}
   comboUI: {fileID: 1369910009}
+  comboReadyVoice: {fileID: 8300000, guid: 9c6ab7a5c284e9e44b3eb5e518960ed4, type: 3}
+  comboReadyVoiceVolume: 1
 --- !u!50 &1858453478
 Rigidbody2D:
   serializedVersion: 4

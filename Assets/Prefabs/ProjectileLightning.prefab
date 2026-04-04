@@ -137,6 +137,10 @@ MonoBehaviour:
   speed: 12
   damage: 20
   lifetime: 4
+  hitSfx: {fileID: 8300000, guid: 2a2889342c8d8a24595bc7d56e813f7b, type: 3}
+  hitVolume: 0.3
+  minHitPitch: 0.95
+  maxHitPitch: 1.05
   bonusDamage: 20
 --- !u!95 &3193352877459089908
 Animator:

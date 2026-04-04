@@ -74,6 +74,10 @@ public class PlayerController : MonoBehaviour
     public SpecialUIIcon lightningUI;
     public SpecialUIIcon comboUI;
 
+    public AudioClip comboReadyVoice;
+    public float comboReadyVoiceVolume = 1f;
+    private bool comboWasReadyLastFrame = false;
+
 
     // sfx cooldowns to not spam audio
     private float fireSfxTimer = 0f;
@@ -137,6 +141,7 @@ public class PlayerController : MonoBehaviour
         HandleAutoFire();
         HandleSpecials();
         HandleMovementLoop();
+        HandleComboReadyVoice();
         UpdateSpecialUI();
     }
 
@@ -189,6 +194,20 @@ public class PlayerController : MonoBehaviour
             moveLoopSource.volume = moveLoopVolume;
             moveLoopSource.Play();
         }
+    }
+    void HandleComboReadyVoice()
+    {
+        bool comboReadyNow = ComboReady();
+
+        if (comboReadyNow && !comboWasReadyLastFrame)
+        {
+            PlayRandomizedSfx(comboReadyVoice, comboReadyVoiceVolume);
+
+            if (MusicManager.instance != null)
+                MusicManager.instance.DuckForSeconds(0.3f, comboReadyVoice.length);
+        }
+
+        comboWasReadyLastFrame = comboReadyNow;
     }
 
     bool ComboReady()

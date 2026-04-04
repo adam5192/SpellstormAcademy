@@ -137,6 +137,10 @@ MonoBehaviour:
   speed: 8
   damage: 3
   lifetime: 2
+  hitSfx: {fileID: 8300000, guid: 00276a99e44777443b02ebea7c0fc700, type: 3}
+  hitVolume: 0.15
+  minHitPitch: 0.95
+  maxHitPitch: 1.05
 --- !u!95 &-9109472890276546463
 Animator:
   serializedVersion: 5
