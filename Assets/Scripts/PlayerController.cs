@@ -59,6 +59,15 @@ public class PlayerController : MonoBehaviour
     public float comboSpecialVolume = 1f;
     public AudioClip ouchSfx;
 
+    [Header("movement loop")]
+    public AudioClip moveLoopSfx;
+    public AudioClip empoweredMoveLoopSfx;
+    public float moveLoopVolume = 0.3f;
+
+    [Header("pitch randomization")]
+    public float minPitch = 0.94f;
+    public float maxPitch = 1.06f;
+
     [Header("special ui")]
     public SpecialUIIcon fireUI;
     public SpecialUIIcon iceUI;
@@ -73,6 +82,7 @@ public class PlayerController : MonoBehaviour
 
 
     private AudioSource audioSrc;
+    private AudioSource moveLoopSource;
 
 
     // upgrades + leveling
@@ -99,6 +109,19 @@ public class PlayerController : MonoBehaviour
         upgradeManager = GetComponent<UpgradeManager>();
         audioSrc = GetComponent<AudioSource>();
 
+        if (audioSrc != null)
+        {
+            audioSrc.playOnAwake = false;
+            audioSrc.loop = false;
+            audioSrc.spatialBlend = 0f;
+        }
+
+        moveLoopSource = gameObject.AddComponent<AudioSource>();
+        moveLoopSource.playOnAwake = false;
+        moveLoopSource.loop = true;
+        moveLoopSource.spatialBlend = 0f;
+        moveLoopSource.volume = moveLoopVolume;
+
         if (ui != null)
             ui.UpdateHealth(currentHealth);
     }
@@ -113,6 +136,7 @@ public class PlayerController : MonoBehaviour
         HandleMovementInput();
         HandleAutoFire();
         HandleSpecials();
+        HandleMovementLoop();
         UpdateSpecialUI();
     }
 
@@ -131,6 +155,45 @@ public class PlayerController : MonoBehaviour
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
         moveInput = new Vector2(moveX, moveY).normalized;
+    }
+
+    void HandleMovementLoop()
+    {
+        if (moveLoopSource == null)
+            return;
+
+        AudioClip wantedClip = ComboReady() ? empoweredMoveLoopSfx : moveLoopSfx;
+        bool isMoving = moveInput.sqrMagnitude > 0.01f;
+
+        if (!isMoving || wantedClip == null || isDead)
+        {
+            if (moveLoopSource.isPlaying)
+                moveLoopSource.Stop();
+            return;
+        }
+
+        if (moveLoopSource.clip != wantedClip)
+        {
+            moveLoopSource.clip = wantedClip;
+
+            float speed = rb.velocity.magnitude;
+            float maxSpeed = moveSpeed;
+            float t = Mathf.Clamp01(speed / maxSpeed);
+            moveLoopSource.pitch = Mathf.Lerp(1.3f, 3f, t);
+
+            moveLoopSource.volume = moveLoopVolume;
+            moveLoopSource.Play();
+        }
+        else if (!moveLoopSource.isPlaying)
+        {
+            moveLoopSource.volume = moveLoopVolume;
+            moveLoopSource.Play();
+        }
+    }
+
+    bool ComboReady()
+    {
+        return fireRunes >= 5 && iceRunes >= 5 && lightningRunes >= 5;
     }
 
     void HandleAutoFire()
@@ -196,7 +259,7 @@ public class PlayerController : MonoBehaviour
                 // scale projectile speed
                 pb.speed *= upgradeManager.projectileSpeedMultiplier;
 
-                // scale projectile damage 
+                // scale projectile damage
                 pb.damage = Mathf.RoundToInt(pb.damage * upgradeManager.damageMultiplier);
             }
         }
@@ -206,24 +269,34 @@ public class PlayerController : MonoBehaviour
         {
             if (prefab == fireProjectile && fireShootSfx != null && fireSfxTimer <= 0f)
             {
-                audioSrc.PlayOneShot(fireShootSfx, fireShootVolume);
-                fireSfxTimer = 0.15f; // min gap between fire sounds 
+                PlayRandomizedSfx(fireShootSfx, fireShootVolume);
+                fireSfxTimer = 0.15f; // min gap between fire sounds
             }
 
             if (prefab == iceProjectile && iceShootSfx != null && iceSfxTimer <= 0f)
             {
-                audioSrc.PlayOneShot(iceShootSfx, iceShootVolume);
+                PlayRandomizedSfx(iceShootSfx, iceShootVolume);
                 iceSfxTimer = 0.2f;
             }
 
             if (prefab == lightningProjectile && lightningShootSfx != null && lightningSfxTimer <= 0f)
             {
-                audioSrc.PlayOneShot(lightningShootSfx, lightningShootVolume);
+                PlayRandomizedSfx(lightningShootSfx, lightningShootVolume);
                 lightningSfxTimer = 0.2f;
             }
         }
     }
 
+    void PlayRandomizedSfx(AudioClip clip, float volume)
+    {
+        if (audioSrc == null || clip == null)
+            return;
+
+        float oldPitch = audioSrc.pitch;
+        audioSrc.pitch = Random.Range(minPitch, maxPitch);
+        audioSrc.PlayOneShot(clip, volume);
+        audioSrc.pitch = oldPitch;
+    }
 
 
     // get direction toward nearest enemy, or up if none
@@ -277,7 +350,7 @@ public class PlayerController : MonoBehaviour
             GameObject special = Instantiate(fireSpecial, transform.position, Quaternion.identity);
             special.GetComponent<FireSpecial>()?.SetDirection(mouseDir);
             fireRunes -= 5;
-            audioSrc.PlayOneShot(fireSpecialSfx, fireSpecialVolume);
+            PlayRandomizedSfx(fireSpecialSfx, fireSpecialVolume);
             UpdateSpecialUI();
         }
 
@@ -287,7 +360,7 @@ public class PlayerController : MonoBehaviour
             GameObject special = Instantiate(iceSpecial, transform.position, Quaternion.identity);
             special.GetComponent<IceSpecial>()?.SetDirection(mouseDir);
             iceRunes -= 5;
-            audioSrc.PlayOneShot(iceSpecialSfx, iceSpecialVolume);
+            PlayRandomizedSfx(iceSpecialSfx, iceSpecialVolume);
             UpdateSpecialUI();
         }
 
@@ -296,7 +369,7 @@ public class PlayerController : MonoBehaviour
         {
             Instantiate(lightningSpecial, transform.position, Quaternion.identity);
             lightningRunes -= 5;
-            audioSrc.PlayOneShot(lightningSpecialSfx, lightningSpecialVolume);
+            PlayRandomizedSfx(lightningSpecialSfx, lightningSpecialVolume);
             UpdateSpecialUI();
         }
 
@@ -309,7 +382,7 @@ public class PlayerController : MonoBehaviour
             fireRunes -= 5;
             iceRunes -= 5;
             lightningRunes -= 5;
-            audioSrc.PlayOneShot(comboSpecialSfx, comboSpecialVolume);
+            PlayRandomizedSfx(comboSpecialSfx, comboSpecialVolume);
             UpdateSpecialUI();
         }
     }
@@ -386,7 +459,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isDead) return;
 
-        audioSrc.PlayOneShot(ouchSfx, 1);
+        PlayRandomizedSfx(ouchSfx, 1f);
         currentHealth -= dmg;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
@@ -412,14 +485,13 @@ public class PlayerController : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
+        if (moveLoopSource != null && moveLoopSource.isPlaying)
+            moveLoopSource.Stop();
+
         if (GameManager.instance != null)
             GameManager.instance.GameOver();
 
         Debug.Log("player died");
         enabled = false;
     }
-
-
-
-
 }

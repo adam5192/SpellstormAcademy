@@ -12,6 +12,10 @@ public class EnemyController : MonoBehaviour
     private float stopDistance = 0.5f;    // how close to stop from player
     private SpriteRenderer spriteRenderer;
 
+    [Header("attack sound")]
+    public AudioClip attackSfx;
+    public float attackVolume = 1f;
+
     void Awake()
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -86,6 +90,10 @@ public class EnemyController : MonoBehaviour
             if (player != null)
             {
                 player.TakeDamage(1f);
+
+                if (attackSfx != null)
+                    AudioHelper.PlayClipAtPointRandomized(attackSfx, transform.position, attackVolume, 0.96f, 1.04f);
+
                 attackTimer = attackCooldown; // wait before next hit
             }
         }

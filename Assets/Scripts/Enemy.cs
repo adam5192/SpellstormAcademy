@@ -14,6 +14,10 @@ public class Enemy : MonoBehaviour
     public GameObject iceRunePrefab;
     public GameObject lightningRunePrefab;
 
+    [Header("sound effects")]
+    public AudioClip deathSfx;
+    public float deathVolume = 1f;
+
     [Header("visual feedback")]
     SpriteRenderer sr;
     Color originalColor;
@@ -125,6 +129,9 @@ public class Enemy : MonoBehaviour
     // death + rune drop
     void Die()
     {
+        if (deathSfx != null)
+            AudioHelper.PlayClipAtPointRandomized(deathSfx, transform.position, deathVolume, 0.94f, 1.06f);
+
         GameObject[] runes = { fireRunePrefab, iceRunePrefab, lightningRunePrefab };
         int randomIndex = Random.Range(0, runes.Length);
 

@@ -7,6 +7,12 @@ public class ProjectileBase : MonoBehaviour
     public int damage = 1;
     public float lifetime = 4f;
 
+    [Header("impact sound")]
+    public AudioClip hitSfx;
+    public float hitVolume = 1f;
+    public float minHitPitch = 0.95f;
+    public float maxHitPitch = 1.05f;
+
     protected Vector2 moveDir;
 
     void Start()
@@ -42,6 +48,10 @@ public class ProjectileBase : MonoBehaviour
         {
             Enemy e = other.GetComponent<Enemy>();
             OnHitEnemy(e);
+
+            if (hitSfx != null)
+                AudioHelper.PlayClipAtPointRandomized(hitSfx, transform.position, hitVolume, minHitPitch, maxHitPitch);
+
             Destroy(gameObject);
         }
     }
